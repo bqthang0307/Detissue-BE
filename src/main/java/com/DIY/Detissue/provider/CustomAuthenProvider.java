@@ -1,7 +1,7 @@
 package com.DIY.Detissue.provider;
 
 
-import com.DIY.Detissue.entity.UserEntity;
+import com.DIY.Detissue.entity.User;
 import com.DIY.Detissue.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -31,7 +31,7 @@ public class CustomAuthenProvider implements AuthenticationProvider {
         String username = authentication.getName();
         //Lấy password người dùng truyền vào
         String password = authentication.getCredentials().toString();
-        UserEntity user = userRepository.findByUsername(username);
+        User user = userRepository.findByUsername(username);
         if (user != null && passwordEncoder.matches(password,user.getPassword())){
             //Đăng nhập thành công
             return new UsernamePasswordAuthenticationToken(username,user.getPassword(),new ArrayList<>());
