@@ -1,5 +1,6 @@
 package com.DIY.Detissue.config;
 
+
 import com.DIY.Detissue.filter.JwtFilter;
 import com.DIY.Detissue.provider.CustomAuthenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,23 +57,21 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.csrf().disable()//tắt hình thức cấu hình liên quan đến tấn công CSRF
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)//khai báo không sử dụng session
-                .and()
-                .cors().configurationSource(corsConfigurationSource())
-                .and()
-//                .authorizeHttpRequests()//qui định lại các rule liên quan đến chứng thực cho link được gọi
-//                .antMatchers("/signin"
-//                        , "/signup"
-//                        , "/demo/**"
-//                        , "/product/**"
-//                        , "/category"
-//                        , "/blog"
-//                        , "/comment").permitAll()//các link này không cần chứng thực
-//                .antMatchers("/product/user").authenticated()
-//                .anyRequest().authenticated()//tất cả các link còn lại phải được chứng thực
-//                .and()
+    public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
+        return httpSecurity
+                .csrf(c -> c.disable())
+                .sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .cors(c -> c.configurationSource(corsConfigurationSource()))
+                .authorizeRequests(a -> a
+                        .requestMatchers(
+                                "/user/signup", "/user/signin",
+                                "/demo/**",
+                                "/product/**",
+                                "/category",
+                                "/blog",
+                                "/comment").permitAll()
+                        .requestMatchers("/product/user").authenticated()
+                        .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }

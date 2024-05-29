@@ -1,5 +1,8 @@
 package com.DIY.Detissue.service.Imp;
 
-public interface UserServiceImp {
+import com.DIY.Detissue.payload.request.SignupRequest;
 
+public interface UserServiceImp {
+    boolean addUser(SignupRequest request);
+    boolean updateLoginTime(String username);
 }

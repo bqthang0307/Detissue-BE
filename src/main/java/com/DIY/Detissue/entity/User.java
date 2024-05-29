@@ -2,6 +2,7 @@ package com.DIY.Detissue.entity;
 
 import jakarta.persistence.*;
 
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -28,10 +29,10 @@ public class User {
     private String phone;
 
     @Column(name = "create_at")
-    private String create_at;
+    private Date create_at;
 
     @Column(name = "last_login")
-    private String last_login;
+    private Date last_login;
 
     @OneToMany(mappedBy = "user")
     private Set<Blog> blogs = new LinkedHashSet<>();
@@ -126,19 +127,19 @@ public class User {
         this.phone = phone;
     }
 
-    public String getCreate_at() {
+    public Date getCreate_at() {
         return create_at;
     }
 
-    public void setCreate_at(String create_at) {
+    public void setCreate_at(Date create_at) {
         this.create_at = create_at;
     }
 
-    public String getLast_login() {
+    public Date getLast_login() {
         return last_login;
     }
 
-    public void setLast_login(String last_login) {
+    public void setLast_login(Date last_login) {
         this.last_login = last_login;
     }
 
