@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ProductServiceImp {
     List<ProductResponse> findAllProduct(int page, int size);
+    List<ProductResponse> findProductByCategory(int page, int size, int id);
 }

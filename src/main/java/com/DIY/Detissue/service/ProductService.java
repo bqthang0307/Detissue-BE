@@ -23,6 +23,7 @@ public class ProductService implements ProductServiceImp {
 
     @Autowired
     private ProductSkusRepository productSkusRepository;
+
     @Override
     public List<ProductResponse> findAllProduct(int page, int size) {
         List<ProductResponse> responses = new ArrayList<>();
@@ -49,7 +50,39 @@ public class ProductService implements ProductServiceImp {
 
                 responses.add(response);
             }
-        }catch (Exception e){
+        } catch (Exception e) {
+            throw new CustomException("Error findAllProduct in ProductService " + e.getMessage());
+        }
+        return responses;
+    }
+
+    @Override
+    public List<ProductResponse> findProductByCategory(int page, int size, int id) {
+        List<ProductResponse> responses = new ArrayList<>();
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            List<Product> list = productRepository.findByCategoryId(id, pageable);
+            for (Product product : list) {
+                ProductResponse response = new ProductResponse();
+                response.setId(product.getId());
+                response.setName(product.getName());
+                response.setShortDesc(product.getShortDesc());
+                response.setFullDesc(product.getFullDesc());
+                response.setImage(product.getImage());
+                response.setCategory(product.getCategory().getName());
+
+                Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
+                long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
+
+                Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
+                long minPrice = (minPriceLong != null) ? minPriceLong : 0;
+
+                response.setPriceMax(maxPrice);
+                response.setPriceMin(minPrice);
+
+                responses.add(response);
+            }
+        } catch (Exception e) {
             throw new CustomException("Error findAllProduct in ProductService " + e.getMessage());
         }
         return responses;
