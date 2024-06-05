@@ -21,8 +21,7 @@ public class ProductSkus {
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
-    @Column(name = "price", precision = 10, scale = 2)
-    private BigDecimal price;
+
 
     @ManyToMany
     @JoinTable(name = "attribute_option_skus",
@@ -41,6 +40,17 @@ public class ProductSkus {
 
     @OneToMany(mappedBy = "productSkus")
     private Set<com.DIY.Detissue.entity.ShoppingCartItem> shoppingCartItems = new LinkedHashSet<>();
+
+    @Column(name = "price")
+    private Long price;
+
+    public Long getPrice() {
+        return price;
+    }
+
+    public void setPrice(Long price) {
+        this.price = price;
+    }
 
     public Integer getId() {
         return id;
@@ -66,13 +76,7 @@ public class ProductSkus {
         this.stockQuantity = stockQuantity;
     }
 
-    public BigDecimal getPrice() {
-        return price;
-    }
 
-    public void setPrice(BigDecimal price) {
-        this.price = price;
-    }
 
     public Set<com.DIY.Detissue.entity.AttributeOption> getAttributeOptions() {
         return attributeOptions;
