@@ -87,4 +87,35 @@ public class ProductService implements ProductServiceImp {
         }
         return responses;
     }
+
+    @Override
+    public List<ProductResponse> findUserWishListByUserId(int id) {
+        List<ProductResponse> responses = new ArrayList<>();
+        try {
+            List<Product> list = productRepository.findUserWishListByUserId(id);
+            for (Product product : list) {
+                ProductResponse response = new ProductResponse();
+                response.setId(product.getId());
+                response.setName(product.getName());
+                response.setShortDesc(product.getShortDesc());
+                response.setFullDesc(product.getFullDesc());
+                response.setImage(product.getImage());
+                response.setCategory(product.getCategory().getName());
+
+                Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
+                long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
+
+                Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
+                long minPrice = (minPriceLong != null) ? minPriceLong : 0;
+
+                response.setPriceMax(maxPrice);
+                response.setPriceMin(minPrice);
+
+                responses.add(response);
+            }
+        } catch (Exception e) {
+            throw new CustomException("Error findUserWishListByUserId in ProductService " + e.getMessage());
+        }
+        return responses;
+    }
 }

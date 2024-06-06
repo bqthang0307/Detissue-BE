@@ -55,6 +55,20 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<UserCoupon> userCoupons = new LinkedHashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "user_wishlist",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "product_id"))
+    private Set<Product> products = new LinkedHashSet<>();
+
+    public Set<Product> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Product> products) {
+        this.products = products;
+    }
+
     public Set<UserCoupon> getUserCoupons() {
         return userCoupons;
     }

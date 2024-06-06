@@ -15,4 +15,7 @@ public interface ProductRepository extends JpaRepository<Product,Integer>, Pagin
     List<Product> findAllProductByPaging(Pageable pageable);
     @Query("SELECT p FROM Product p WHERE p.category.id = ?1")
     List<Product> findByCategoryId(int id, Pageable pageable);
+    @Query("SELECT p from UserWishlist u " +
+            "join u.product p WHERE u.user.id = ?1")
+    List<Product> findUserWishListByUserId(int id);
 }
