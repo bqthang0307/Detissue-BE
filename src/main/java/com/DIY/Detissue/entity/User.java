@@ -61,6 +61,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "product_id"))
     private Set<Product> products = new LinkedHashSet<>();
 
+    @OneToMany(mappedBy = "user")
+    private Set<ShopOrder> shopOrders = new LinkedHashSet<>();
+
+    public Set<ShopOrder> getShopOrders() {
+        return shopOrders;
+    }
+
+    public void setShopOrders(Set<ShopOrder> shopOrders) {
+        this.shopOrders = shopOrders;
+    }
+
     public Set<Product> getProducts() {
         return products;
     }

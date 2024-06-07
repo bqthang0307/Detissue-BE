@@ -15,9 +15,6 @@ public class ShopOrder {
     @Column(name = "id", nullable = false)
     private Integer id;
 
-    @Column(name = "user_id")
-    private Integer userId;
-
     @Column(name = "order_date")
     private Instant orderDate;
 
@@ -39,6 +36,18 @@ public class ShopOrder {
     @OneToMany(mappedBy = "shopOrder")
     private Set<com.DIY.Detissue.entity.OrderLine> orderLines = new LinkedHashSet<>();
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -46,15 +55,6 @@ public class ShopOrder {
     public void setId(Integer id) {
         this.id = id;
     }
-
-    public Integer getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Integer userId) {
-        this.userId = userId;
-    }
-
     public Instant getOrderDate() {
         return orderDate;
     }

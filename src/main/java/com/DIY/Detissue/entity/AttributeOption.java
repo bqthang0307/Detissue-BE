@@ -26,6 +26,34 @@ public class AttributeOption {
             inverseJoinColumns = @JoinColumn(name = "skus_id"))
     private Set<com.DIY.Detissue.entity.ProductSkus> productSkuses = new LinkedHashSet<>();
 
+    @ManyToMany
+    @JoinTable(name = "order_line_attributes_options",
+            joinColumns = @JoinColumn(name = "attribute_options_id"),
+            inverseJoinColumns = @JoinColumn(name = "order_line_id"))
+    private Set<OrderLine> orderLines = new LinkedHashSet<>();
+
+    @ManyToMany
+    @JoinTable(name = "user_cart_item_attributes_options",
+            joinColumns = @JoinColumn(name = "attribute_options_id"),
+            inverseJoinColumns = @JoinColumn(name = "shopping_cart_item_id"))
+    private Set<ShoppingCartItem> shoppingCartItems = new LinkedHashSet<>();
+
+    public Set<ShoppingCartItem> getShoppingCartItems() {
+        return shoppingCartItems;
+    }
+
+    public void setShoppingCartItems(Set<ShoppingCartItem> shoppingCartItems) {
+        this.shoppingCartItems = shoppingCartItems;
+    }
+
+    public Set<OrderLine> getOrderLines() {
+        return orderLines;
+    }
+
+    public void setOrderLines(Set<OrderLine> orderLines) {
+        this.orderLines = orderLines;
+    }
+
     public Integer getId() {
         return id;
     }

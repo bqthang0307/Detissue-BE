@@ -3,6 +3,8 @@ package com.DIY.Detissue.controller;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.SignupRequest;
 import com.DIY.Detissue.payload.response.BaseResponse;
+import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
+import com.DIY.Detissue.service.Imp.ShoppingCartItemServiceImp;
 import com.DIY.Detissue.service.Imp.UserServiceImp;
 import com.DIY.Detissue.utils.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +32,9 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @PostMapping("/signup")
+    @Autowired
+    private ShoppingCartItemServiceImp shoppingCartItemServiceImp;
+    @PostMapping("signup")
     public ResponseEntity<?> signup(@Valid SignupRequest signupRequest, BindingResult bindingResult) {
         // Get list error
         List<FieldError> listError = bindingResult.getFieldErrors();
@@ -45,7 +49,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("/signin")
+    @PostMapping("signin")
     public ResponseEntity<?> signin(
             @RequestParam String username,
             @RequestParam String password
@@ -60,5 +64,15 @@ public class UserController {
         baseResponse.setStatusCode(200);
         baseResponse.setData(jwt);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+    @GetMapping("cart")
+    ResponseEntity<?> findShoppingCartItemByUserId(@RequestParam int id){
+        List<ShoppingCartItemResponse> list = shoppingCartItemServiceImp.findByUserId(id);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(list);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
