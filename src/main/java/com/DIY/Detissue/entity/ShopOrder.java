@@ -2,8 +2,7 @@ package com.DIY.Detissue.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-import java.time.Instant;
+import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -16,10 +15,7 @@ public class ShopOrder {
     private Integer id;
 
     @Column(name = "order_date")
-    private Instant orderDate;
-
-    @Column(name = "order_total", precision = 10, scale = 2)
-    private BigDecimal orderTotal;
+    private Date orderDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "payment_method_id")
@@ -40,6 +36,17 @@ public class ShopOrder {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @Column(name = "order_total")
+    private Long orderTotal;
+
+    public Long getOrderTotal() {
+        return orderTotal;
+    }
+
+    public void setOrderTotal(Long orderTotal) {
+        this.orderTotal = orderTotal;
+    }
+
     public User getUser() {
         return user;
     }
@@ -55,20 +62,12 @@ public class ShopOrder {
     public void setId(Integer id) {
         this.id = id;
     }
-    public Instant getOrderDate() {
+    public Date getOrderDate() {
         return orderDate;
     }
 
-    public void setOrderDate(Instant orderDate) {
+    public void setOrderDate(Date orderDate) {
         this.orderDate = orderDate;
-    }
-
-    public BigDecimal getOrderTotal() {
-        return orderTotal;
-    }
-
-    public void setOrderTotal(BigDecimal orderTotal) {
-        this.orderTotal = orderTotal;
     }
 
     public com.DIY.Detissue.entity.PaymentMethod getPaymentMethod() {

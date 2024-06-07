@@ -3,7 +3,9 @@ package com.DIY.Detissue.controller;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.SignupRequest;
 import com.DIY.Detissue.payload.response.BaseResponse;
+import com.DIY.Detissue.payload.response.ShopOrderResponse;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
+import com.DIY.Detissue.service.Imp.ShopOrderServiceImp;
 import com.DIY.Detissue.service.Imp.ShoppingCartItemServiceImp;
 import com.DIY.Detissue.service.Imp.UserServiceImp;
 import com.DIY.Detissue.utils.JwtHelper;
@@ -25,13 +27,10 @@ public class UserController {
 
     @Autowired
     private UserServiceImp userServiceImp;
-
     @Autowired
     private JwtHelper jwtHelper;
-
     @Autowired
     private AuthenticationManager authenticationManager;
-
     @Autowired
     private ShoppingCartItemServiceImp shoppingCartItemServiceImp;
     @PostMapping("signup")
@@ -64,15 +63,5 @@ public class UserController {
         baseResponse.setStatusCode(200);
         baseResponse.setData(jwt);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
-    }
-    @GetMapping("cart")
-    ResponseEntity<?> findShoppingCartItemByUserId(@RequestParam int id){
-        List<ShoppingCartItemResponse> list = shoppingCartItemServiceImp.findByUserId(id);
-
-        BaseResponse response = new BaseResponse();
-        response.setStatusCode(200);
-        response.setData(list);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
