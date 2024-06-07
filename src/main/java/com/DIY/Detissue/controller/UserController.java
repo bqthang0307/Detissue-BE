@@ -31,8 +31,6 @@ public class UserController {
     private JwtHelper jwtHelper;
     @Autowired
     private AuthenticationManager authenticationManager;
-    @Autowired
-    private ShoppingCartItemServiceImp shoppingCartItemServiceImp;
     @PostMapping("signup")
     public ResponseEntity<?> signup(@Valid SignupRequest signupRequest, BindingResult bindingResult) {
         // Get list error
@@ -63,5 +61,15 @@ public class UserController {
         baseResponse.setStatusCode(200);
         baseResponse.setData(jwt);
         return new ResponseEntity<>(baseResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("address")
+    public ResponseEntity<?> findAllAdressByUserId(int id) {
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(userServiceImp.findAddressByUserId(id));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
