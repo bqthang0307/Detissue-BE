@@ -76,7 +76,7 @@ public class UserService implements UserServiceImp {
                 response.setTown_city(address.getTownCity());
                 response.setCountry(address.getCountry().getName());
                 UserAddress userAddress = userAddressRepository.findByUserIdAndAddressId(id, address.getId());
-                if(userAddress == null) throw new CustomException("UserAddress not found");
+                if (userAddress == null) throw new CustomException("UserAddress not found");
                 response.setDefault(userAddress.getIsDefault());
                 responses.add(response);
             }
@@ -84,5 +84,14 @@ public class UserService implements UserServiceImp {
             throw new CustomException("Error findAddressByUserId in UserService " + e.getMessage());
         }
         return responses;
+    }
+
+    @Override
+    public User findByUsername(String username) {
+        try {
+            return userRepository.findByUsername(username);
+        } catch (Exception e) {
+            throw new CustomException("Error findByUsername in UserService " + e.getMessage());
+        }
     }
 }

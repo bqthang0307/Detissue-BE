@@ -1,5 +1,6 @@
 package com.DIY.Detissue.controller;
 
+import com.DIY.Detissue.entity.User;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.SignupRequest;
 import com.DIY.Detissue.payload.response.BaseResponse;
@@ -31,6 +32,7 @@ public class UserController {
     private JwtHelper jwtHelper;
     @Autowired
     private AuthenticationManager authenticationManager;
+
     @PostMapping("signup")
     public ResponseEntity<?> signup(@Valid SignupRequest signupRequest, BindingResult bindingResult) {
         // Get list error
@@ -53,7 +55,8 @@ public class UserController {
     ) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(token);
-        String jwt = jwtHelper.generateToken("Hello login");
+        User user = userServiceImp.findByUsername(username);
+        String jwt = jwtHelper.generateToken(String.valueOf(user.getId()));
         userServiceImp.updateLoginTime(username);
 
         //Nếu chứng thực thành công sẽ chạy code tiếp theo còn nếu thất bại thì sẽ văng lỗi chưa chứng thực
@@ -64,7 +67,9 @@ public class UserController {
     }
 
     @PostMapping("address")
-    public ResponseEntity<?> findAllAdressByUserId(int id) {
+    public ResponseEntity<?> findAllAdressByUserId(@RequestHeader("Authorization") String token){
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
 
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);

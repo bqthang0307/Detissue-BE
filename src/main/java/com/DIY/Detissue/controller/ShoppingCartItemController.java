@@ -3,23 +3,26 @@ package com.DIY.Detissue.controller;
 import com.DIY.Detissue.payload.response.BaseResponse;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
 import com.DIY.Detissue.service.Imp.ShoppingCartItemServiceImp;
+import com.DIY.Detissue.utils.JwtHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
 @RestController
 @RequestMapping("shopping-cart")
 public class ShoppingCartItemController {
     @Autowired
     private ShoppingCartItemServiceImp shoppingCartItemServiceImp;
+    @Autowired
+    private JwtHelper jwtHelper;
 
     @GetMapping("user")
-    ResponseEntity<?> findShoppingCartItemByUserId(@RequestParam int id){
+    ResponseEntity<?> findShoppingCartItemByUserId(@RequestHeader("Authorization") String token) {
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
         List<ShoppingCartItemResponse> list = shoppingCartItemServiceImp.findByUserId(id);
 
         BaseResponse response = new BaseResponse();

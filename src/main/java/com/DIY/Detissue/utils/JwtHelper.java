@@ -1,5 +1,6 @@
 package com.DIY.Detissue.utils;
 
+import com.DIY.Detissue.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -35,4 +36,17 @@ public class JwtHelper {
         return claims;
     }
 
+    public int getUserIdFromToken(String token) {
+        Key key = Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        try {
+            return Integer.parseInt(claims.getSubject());
+        } catch (NumberFormatException e) {
+            throw new CustomException("Token is invalid");
+        }
+    }
 }
