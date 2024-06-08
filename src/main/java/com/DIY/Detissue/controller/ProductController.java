@@ -7,10 +7,7 @@ import com.DIY.Detissue.service.Imp.ProductServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -40,6 +37,17 @@ public class ProductController {
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);
         response.setData(list);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    ResponseEntity<?> findProductById(@PathVariable int id){
+        ProductResponse result = productServiceImp.findById(id);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(result);
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

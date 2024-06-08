@@ -9,4 +9,5 @@ public interface ProductServiceImp {
     List<ProductResponse> findAllProduct(int page, int size);
     List<ProductResponse> findProductByCategory(int page, int size, int id);
     List<ProductResponse> findUserWishListByUserId(int id);
+    ProductResponse findById(int id);
 }

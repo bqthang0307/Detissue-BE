@@ -18,4 +18,5 @@ public interface ProductRepository extends JpaRepository<Product,Integer>, Pagin
     @Query("SELECT p from UserWishlist u " +
             "join u.product p WHERE u.user.id = ?1")
     List<Product> findUserWishListByUserId(int id);
+    Product findProductById(int id);
 }
