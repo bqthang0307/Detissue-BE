@@ -30,17 +30,6 @@ public class ProductController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @GetMapping("user-wishlist")
-    ResponseEntity<?> findUserWishListByUserId(@RequestParam int id){
-        List<ProductResponse> list = productServiceImp.findUserWishListByUserId(id);
-
-        BaseResponse response = new BaseResponse();
-        response.setStatusCode(200);
-        response.setData(list);
-
-        return new ResponseEntity<>(response, HttpStatus.OK);
-    }
-
     @GetMapping("/{id}")
     ResponseEntity<?> findProductById(@PathVariable int id){
         ProductResponse result = productServiceImp.findById(id);
