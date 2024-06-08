@@ -28,4 +28,24 @@ public class UserWishlistController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("delete")
+    ResponseEntity<?> deleteUserWishlist(
+            @RequestParam int userId,
+            @RequestParam int productId) {
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(userWishlistServiceImp.deleteProductFromWishlist(userId, productId));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("add")
+    ResponseEntity<?> addUserWishlist(
+            @RequestParam int userId,
+            @RequestParam int productId) {
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(userWishlistServiceImp.addUserWishlist(userId, productId));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
