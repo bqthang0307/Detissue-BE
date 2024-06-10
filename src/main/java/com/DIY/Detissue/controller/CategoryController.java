@@ -20,7 +20,7 @@ public class CategoryController {
     @Autowired
     private CategoryServiceImp categoryServiceImp;
     @GetMapping("")
-    ResponseEntity<?> findAllProduct(){
+    ResponseEntity<?> findAllCategory(){
 
         List<CategoryResponse> list = categoryServiceImp.findAll();
 

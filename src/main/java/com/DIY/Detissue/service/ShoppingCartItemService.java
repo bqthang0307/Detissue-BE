@@ -2,6 +2,7 @@ package com.DIY.Detissue.service;
 
 import com.DIY.Detissue.entity.ProductSkus;
 import com.DIY.Detissue.entity.ShoppingCartItem;
+import com.DIY.Detissue.entity.UserCartItemAttributesOption;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
 import com.DIY.Detissue.repository.*;
@@ -22,6 +23,8 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     private ProductSkusRepository productSkusRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private UserCartItemAttributeOptionRepository userCartItemAttributeOptionRepository;
 
     @Override
     public List<ShoppingCartItemResponse> findByUserId(int id) {
@@ -54,21 +57,39 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     @Override
     public boolean addShoppingCartItem(int userId, int productId, int quantity) {
         try {
-            ShoppingCartItem item = new ShoppingCartItem();
-            cartRepository.findByUserId(userId).ifPresentOrElse(cart -> {
-                item.setCart(cart);
-            }, () -> {
-                throw new CustomException("Cart not found");
-            });
-            productSkusRepository.findByProductId(productId).ifPresentOrElse(productSkus -> {
-                item.setProductSkus(productSkus);
-            }, () -> {
-                throw new CustomException("Product not found");
-            });
-            item.setQuantity(quantity);
+            ShoppingCartItem item = shoppingCartItemRepository.findByUserIdAndProductId(userId, productId);
+            if (item != null) {
+                item.setQuantity(item.getQuantity() + 1);
+            } else {
+                cartRepository.findByUserId(userId).ifPresentOrElse(cart -> {
+                    item.setCart(cart);
+                }, () -> {
+                    throw new CustomException("Cart not found");
+                });
+                productSkusRepository.findByProductId(productId).ifPresentOrElse(productSkus -> {
+                    item.setProductSkus(productSkus);
+                }, () -> {
+                    throw new CustomException("Product not found");
+                });
+                item.setQuantity(quantity);
+            }
             shoppingCartItemRepository.save(item);
         } catch (Exception e) {
             throw new CustomException("Error addShoppingCartItem in ShoppingCartItemService " + e.getMessage());
+        }
+        return true;
+    }
+    @Override
+    public boolean deleteShopingCartItemById(int id) {
+        try {
+            ShoppingCartItem item = shoppingCartItemRepository.findById(id).
+                                    orElseThrow(() -> new CustomException("ShoppingCartItem not found"));
+            //delete foreign key first
+            List<UserCartItemAttributesOption> listForeignKey = userCartItemAttributeOptionRepository.findByShoppingCartItemId(id);
+            userCartItemAttributeOptionRepository.deleteAll(listForeignKey);
+            shoppingCartItemRepository.delete(item);
+        } catch (Exception e) {
+            throw new CustomException("Error deleteShopingCartItemById in ShoppingCartItemService " + e.getMessage());
         }
         return true;
     }

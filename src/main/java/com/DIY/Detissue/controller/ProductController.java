@@ -40,4 +40,17 @@ public class ProductController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/category")
+    ResponseEntity<?> findProductByCategory(@RequestParam int page,
+                                            @RequestParam int size,
+                                            @RequestParam int id){
+        List<ProductResponse> list = productServiceImp.findProductByCategory(page, size, id);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(list);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

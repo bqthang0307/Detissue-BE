@@ -31,4 +31,28 @@ public class ShoppingCartItemController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("add")
+    ResponseEntity<?> addShoppingCartItem(@RequestHeader("Authorization") String token, @RequestParam int productId, @RequestParam int quantity) {
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
+        List<ShoppingCartItemResponse> list = shoppingCartItemServiceImp.findByUserId(id);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(list);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+    @GetMapping("delete")
+    ResponseEntity<?> deleteShopingCartItemById(@RequestHeader("Authorization") String token, @RequestParam int id) {
+        token = token.substring(7);
+        int userId = jwtHelper.getUserIdFromToken(token);
+        boolean result = shoppingCartItemServiceImp.deleteShopingCartItemById(id);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(result);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }
