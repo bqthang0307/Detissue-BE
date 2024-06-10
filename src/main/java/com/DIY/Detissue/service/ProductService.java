@@ -1,9 +1,11 @@
 package com.DIY.Detissue.service;
 
+import com.DIY.Detissue.entity.AttributeOption;
 import com.DIY.Detissue.entity.Product;
 import com.DIY.Detissue.entity.ProductSkus;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ProductResponse;
+import com.DIY.Detissue.repository.AttributeOptionsRepository;
 import com.DIY.Detissue.repository.ProductRepository;
 import com.DIY.Detissue.repository.ProductSkusRepository;
 import com.DIY.Detissue.service.Imp.ProductServiceImp;
@@ -90,7 +92,6 @@ public class ProductService implements ProductServiceImp {
 
     @Override
     public ProductResponse findById(int id) {
-        List<ProductResponse> responses = new ArrayList<>();
         ProductResponse response = new ProductResponse();
         try {
             Product product = productRepository.findProductById(id);
@@ -109,7 +110,6 @@ public class ProductService implements ProductServiceImp {
 
             response.setPriceMax(maxPrice);
             response.setPriceMin(minPrice);
-
         } catch (Exception e) {
             throw new CustomException("Error findProductBySearch in ProductService " + e.getMessage());
         }

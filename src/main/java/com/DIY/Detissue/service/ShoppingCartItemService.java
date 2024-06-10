@@ -66,7 +66,7 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 }, () -> {
                     throw new CustomException("Cart not found");
                 });
-                productSkusRepository.findByProductId(productId).ifPresentOrElse(productSkus -> {
+                productSkusRepository.findById(productId).ifPresentOrElse(productSkus -> {
                     item.setProductSkus(productSkus);
                 }, () -> {
                     throw new CustomException("Product not found");
