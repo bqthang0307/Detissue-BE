@@ -35,11 +35,10 @@ public class ShoppingCartItemController {
     ResponseEntity<?> addShoppingCartItem(@RequestHeader("Authorization") String token, @RequestParam int productId, @RequestParam int quantity) {
         token = token.substring(7);
         int id = jwtHelper.getUserIdFromToken(token);
-        List<ShoppingCartItemResponse> list = shoppingCartItemServiceImp.findByUserId(id);
 
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);
-        response.setData(list);
+        response.setData(shoppingCartItemServiceImp.addShoppingCartItem(id, productId, quantity));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

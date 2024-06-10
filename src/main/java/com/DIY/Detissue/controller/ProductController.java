@@ -53,4 +53,17 @@ public class ProductController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @GetMapping("/search")
+    ResponseEntity<?> searchProduct(@RequestParam int page,
+                                    @RequestParam int size,
+                                    @RequestParam String keyword){
+        List<ProductResponse> list = productServiceImp.findProductBySearch(keyword, page, size);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(list);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

@@ -115,4 +115,36 @@ public class ProductService implements ProductServiceImp {
         }
         return response;
     }
+
+    @Override
+    public List<ProductResponse> findProductBySearch(String Search, int page, int size) {
+        List<ProductResponse> responses = new ArrayList<>();
+        try {
+            Pageable pageable = PageRequest.of(page, size);
+            List<Product> list = productRepository.findByNameContaining(Search, pageable);
+            for (Product product : list) {
+                ProductResponse response = new ProductResponse();
+                response.setId(product.getId());
+                response.setName(product.getName());
+                response.setShortDesc(product.getShortDesc());
+                response.setFullDesc(product.getFullDesc());
+                response.setImage(product.getImage());
+                response.setCategory(product.getCategory().getName());
+
+                Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
+                long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
+
+                Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
+                long minPrice = (minPriceLong != null) ? minPriceLong : 0;
+
+                response.setPriceMax(maxPrice);
+                response.setPriceMin(minPrice);
+
+                responses.add(response);
+            }
+        } catch (Exception e) {
+            throw new CustomException("Error findProductBySearch in ProductService " + e.getMessage());
+        }
+        return responses;
+    }
 }
