@@ -13,6 +13,7 @@ public interface AttributeOptionsRepository extends JpaRepository<AttributeOptio
     List<AttributeOption> findByShoppingCartItemsId(int id);
 
     @Query("SELECT ao FROM AttributeOptionSkus aos " +
-            "join aos.attributeOption ao WHERE aos.skus.product.id = ?1")
-    List<AttributeOption> findByProductId(int id);
+            "join aos.attributeOption ao " +
+            "join ao.attribute WHERE aos.skus.id = ?1 and ao.attribute.id = ?2")
+    List<AttributeOption> findByProductSkusesIdAndAttributeId(int productSkusId, int attributeId);
 }
