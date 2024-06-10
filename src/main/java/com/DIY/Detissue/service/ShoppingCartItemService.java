@@ -4,21 +4,25 @@ import com.DIY.Detissue.entity.ProductSkus;
 import com.DIY.Detissue.entity.ShoppingCartItem;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
-import com.DIY.Detissue.repository.AttributeOptionsRepository;
-import com.DIY.Detissue.repository.ProductSkusRepository;
-import com.DIY.Detissue.repository.ShoppingCartItemRepository;
+import com.DIY.Detissue.repository.*;
 import com.DIY.Detissue.service.Imp.ShoppingCartItemServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     @Autowired
     private ShoppingCartItemRepository shoppingCartItemRepository;
     @Autowired
     private AttributeOptionsRepository attributeOptionsRepository;
+    @Autowired
+    private ProductSkusRepository productSkusRepository;
+    @Autowired
+    private CartRepository cartRepository;
+
     @Override
     public List<ShoppingCartItemResponse> findByUserId(int id) {
         List<ShoppingCartItemResponse> responses = new ArrayList<>();
@@ -41,9 +45,31 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 });
                 responses.add(response);
             }
-        }catch (Exception e) {
+        } catch (Exception e) {
             throw new CustomException("Error findByUserId in ShoppingCartItemService " + e.getMessage());
         }
         return responses;
+    }
+
+    @Override
+    public boolean addShoppingCartItem(int userId, int productId, int quantity) {
+        try {
+            ShoppingCartItem item = new ShoppingCartItem();
+            cartRepository.findByUserId(userId).ifPresentOrElse(cart -> {
+                item.setCart(cart);
+            }, () -> {
+                throw new CustomException("Cart not found");
+            });
+            productSkusRepository.findByProductId(productId).ifPresentOrElse(productSkus -> {
+                item.setProductSkus(productSkus);
+            }, () -> {
+                throw new CustomException("Product not found");
+            });
+            item.setQuantity(quantity);
+            shoppingCartItemRepository.save(item);
+        } catch (Exception e) {
+            throw new CustomException("Error addShoppingCartItem in ShoppingCartItemService " + e.getMessage());
+        }
+        return true;
     }
 }

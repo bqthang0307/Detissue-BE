@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ProductSkusRepository extends JpaRepository<ProductSkus,Integer> {
@@ -13,4 +14,5 @@ public interface ProductSkusRepository extends JpaRepository<ProductSkus,Integer
     Long findByProductIdWithMinPrice(int id);
     @Query("SELECT Max(p.price) FROM ProductSkus p WHERE p.product.id = ?1")
     Long findByProductIdWithMaxPrice(int id);
+    Optional<ProductSkus> findByProductId(int id);
 }

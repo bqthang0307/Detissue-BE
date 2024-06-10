@@ -19,7 +19,9 @@ public class UserWishlistController {
     @Autowired
     private JwtHelper jwtHelper;
     @GetMapping("user")
-    ResponseEntity<?> findUserWishListByUserId(@RequestParam int id){
+    ResponseEntity<?> findUserWishListByUserId(@RequestHeader("Authorization") String token){
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
         List<ProductResponse> list = userWishlistServiceImp.findUserWishListByUserId(id);
 
         BaseResponse response = new BaseResponse();

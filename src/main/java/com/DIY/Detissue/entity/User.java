@@ -38,9 +38,6 @@ public class User {
     private Set<Blog> blogs = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
-    private Set<Cart> carts = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "user")
     private Set<Comment> comments = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "user")
@@ -63,6 +60,17 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<ShopOrder> shopOrders = new LinkedHashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Cart> carts = new LinkedHashSet<>();
+
+    public Set<Cart> getCarts() {
+        return carts;
+    }
+
+    public void setCarts(Set<Cart> carts) {
+        this.carts = carts;
+    }
 
     public Set<ShopOrder> getShopOrders() {
         return shopOrders;
@@ -119,15 +127,6 @@ public class User {
     public void setComments(Set<Comment> comments) {
         this.comments = comments;
     }
-
-    public Set<Cart> getCarts() {
-        return carts;
-    }
-
-    public void setCarts(Set<Cart> carts) {
-        this.carts = carts;
-    }
-
     public Set<Blog> getBlogs() {
         return blogs;
     }
