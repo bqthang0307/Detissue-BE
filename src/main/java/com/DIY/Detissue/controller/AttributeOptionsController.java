@@ -15,9 +15,9 @@ public class AttributeOptionsController {
     @Autowired
     private AttributeOptionsServiceImp attributeOptionsServiceImp;
     @GetMapping("")
-    private ResponseEntity<?> findByProductSkusIdAndAttributeId(int productSkusId, int attributeId) {
+    private ResponseEntity<?> findByProductSkusIdAndAttributeId(int productId, int attributeId) {
         BaseResponse response = new BaseResponse();
-        response.setData(attributeOptionsServiceImp.findByProductSkusIdAndAttributeId(productSkusId, attributeId));
+        response.setData(attributeOptionsServiceImp.findByProductIdAndAttributeId(productId, attributeId));
         response.setStatusCode(200);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

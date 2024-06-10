@@ -16,11 +16,11 @@ public class AttributeOptionsService implements AttributeOptionsServiceImp {
     @Autowired
     private AttributeOptionsRepository attributeOptionsRepository;
     @Override
-    public List<AttributeOptionsResponse> findByProductSkusIdAndAttributeId(int productSkusId, int attributeId) {
+    public List<AttributeOptionsResponse> findByProductIdAndAttributeId(int productId, int attributeId) {
         List<AttributeOptionsResponse> responses =  new ArrayList<>();
         try {
             List<AttributeOption> list = attributeOptionsRepository.
-                            findByProductSkusesIdAndAttributeId(productSkusId, attributeId);
+                    findByProductIdAndAttributeId(productId, attributeId);
             for (AttributeOption option : list) {
                 AttributeOptionsResponse response = new AttributeOptionsResponse();
                 response.setId(option.getId());

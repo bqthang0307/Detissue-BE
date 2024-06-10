@@ -44,6 +44,6 @@ public class ProductSkusService implements ProductSkusServiceImp {
         }catch (Exception e){
             throw new CustomException("Error findByProductId in ProductSkusService " + e.getMessage());
         }
-        return null;
+        return responses;
     }
 }
