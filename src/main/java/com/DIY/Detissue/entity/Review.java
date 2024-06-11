@@ -25,6 +25,18 @@ public class Review {
     @JoinColumn(name = "product_skus_id")
     private com.DIY.Detissue.entity.ProductSkus productSkus;
 
+    @Lob
+    @Column(name = "reviews")
+    private String reviews;
+
+    public String getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(String reviews) {
+        this.reviews = reviews;
+    }
+
     public Integer getId() {
         return id;
     }
