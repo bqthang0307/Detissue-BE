@@ -14,6 +14,6 @@ public interface ShoppingCartItemRepository extends JpaRepository<ShoppingCartIt
     List<ShoppingCartItem> findByUserId(int id);
 
     @Query("SELECT s FROM ShoppingCartItem s " +
-            "join s.cart c WHERE s.cart.user.id = ?1 AND s.productSkus.product = ?2")
+            "join s.cart c WHERE s.cart.user.id = ?1 AND s.productSkus.product.id = ?2")
     ShoppingCartItem findByUserIdAndProductId(int userId, int productId);
 }

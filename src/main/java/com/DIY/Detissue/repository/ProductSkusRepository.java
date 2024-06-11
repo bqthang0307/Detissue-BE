@@ -17,4 +17,8 @@ public interface ProductSkusRepository extends JpaRepository<ProductSkus,Integer
     Optional<ProductSkus> findById(int id);
 
     List<ProductSkus> findByProductId(int id);
+    @Query("SELECT s FROM AttributeOptionSkus a " +
+            "join a.skus s " +
+            "join a.attributeOption ao WHERE s.product.id = ?1 AND ao.id = ?2")
+    Optional<ProductSkus> findByProductIdAndAttributeOptions(int productId, int attributeOptionsId);
 }

@@ -6,6 +6,6 @@ import java.util.List;
 
 public interface ShoppingCartItemServiceImp {
     List<ShoppingCartItemResponse> findByUserId(int id);
-    boolean addShoppingCartItem(int userId, int productId, int quantity);
+    boolean addShoppingCartItem(int userId, int productId, int quantity, int attributOptionsId);
     boolean deleteShopingCartItemById(int id);
 }

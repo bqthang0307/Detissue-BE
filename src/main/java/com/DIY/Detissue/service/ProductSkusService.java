@@ -20,6 +20,7 @@ public class ProductSkusService implements ProductSkusServiceImp {
     private ProductSkusRepository productSkusRepository;
     @Autowired
     private ImagesRepository imagesRepository;
+
     @Override
     public List<ProductSkusResponse> findByProductId(int id) {
         List<ProductSkusResponse> responses = new ArrayList<>();
@@ -41,7 +42,7 @@ public class ProductSkusService implements ProductSkusServiceImp {
             }
 
 
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new CustomException("Error findByProductId in ProductSkusService " + e.getMessage());
         }
         return responses;
