@@ -38,4 +38,22 @@ public class AddressController {
         response.setStatusCode(200);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PostMapping("update")
+    public ResponseEntity<?> updateAddress(@RequestHeader("Authorization") String token,
+                                           @Valid AddressRequest request,
+                                           BindingResult bindingResult) {
+        List<FieldError> listError = bindingResult.getFieldErrors();
+        for (FieldError errors : listError) {
+            throw new RuntimeException(errors.getDefaultMessage());
+        }
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
+        request.setUserId(id);
+
+        BaseResponse response = new BaseResponse();
+        response.setData(addressServiceImp.updateAddress(request));
+        response.setStatusCode(200);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

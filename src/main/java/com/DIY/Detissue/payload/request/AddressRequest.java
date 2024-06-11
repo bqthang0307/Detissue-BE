@@ -1,12 +1,20 @@
 package com.DIY.Detissue.payload.request;
 
 public class AddressRequest {
-
+    private int id;
     private String street_address;
     private String town_city;
     private String company;
     private int countryId;
     private int userId;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getUserId() {
         return userId;
