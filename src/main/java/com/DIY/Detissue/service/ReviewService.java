@@ -1,9 +1,11 @@
 package com.DIY.Detissue.service;
 
+import com.DIY.Detissue.entity.OrderLine;
 import com.DIY.Detissue.entity.Review;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.ReviewRequest;
 import com.DIY.Detissue.payload.response.ReviewResponse;
+import com.DIY.Detissue.repository.OrderLineRepository;
 import com.DIY.Detissue.repository.ProductSkusRepository;
 import com.DIY.Detissue.repository.ReviewRepository;
 import com.DIY.Detissue.repository.UserRepository;
@@ -25,6 +27,8 @@ public class ReviewService implements ReviewServiceImp {
     private DateHelper dateHelper;
     @Autowired
     private ProductSkusRepository productSkusRepository;
+    @Autowired
+    private OrderLineRepository orderLineRepository;
     @Override
     public List<ReviewResponse> findByProductId(int id) {
         List<ReviewResponse> responses = new ArrayList<>();
@@ -48,6 +52,10 @@ public class ReviewService implements ReviewServiceImp {
     @Override
     public boolean addReview(ReviewRequest request) {
         try {
+            List<OrderLine> list = orderLineRepository.findByUserIdAndProductId(request.getUserId(), request.getProductId());
+            if(list.size() == 0){
+                return false;
+            }
             Review review = new Review();
             review.setRating(request.getRating());
             review.setReviews(request.getReview());
