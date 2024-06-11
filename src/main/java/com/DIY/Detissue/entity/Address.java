@@ -19,9 +19,6 @@ public class Address {
     @Column(name = "town_city")
     private String townCity;
 
-    @Column(name = "state_country", length = 100)
-    private String stateCountry;
-
     @Column(name = "company")
     private String company;
 
@@ -61,15 +58,6 @@ public class Address {
     public void setTownCity(String townCity) {
         this.townCity = townCity;
     }
-
-    public String getStateCountry() {
-        return stateCountry;
-    }
-
-    public void setStateCountry(String stateCountry) {
-        this.stateCountry = stateCountry;
-    }
-
     public String getCompany() {
         return company;
     }

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface AddressRepository extends JpaRepository<UserAddress, Integer> {
+public interface AddressRepository extends JpaRepository<Address, Integer> {
     @Query("select u.address from UserAddress u where u.user.id = ?1")
     List<Address> findByUserId(int userId);
 }
