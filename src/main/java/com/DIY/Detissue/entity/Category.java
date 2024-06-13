@@ -19,10 +19,6 @@ public class Category {
 
     @Column(name = "name", length = 100)
     private String name;
-
-    @OneToMany(mappedBy = "category")
-    private Set<com.DIY.Detissue.entity.Attribute> attributes = new LinkedHashSet<>();
-
     @OneToMany(mappedBy = "parentCategory")
     private Set<com.DIY.Detissue.entity.Category> categories = new LinkedHashSet<>();
 
@@ -59,13 +55,6 @@ public class Category {
         this.name = name;
     }
 
-    public Set<com.DIY.Detissue.entity.Attribute> getAttributes() {
-        return attributes;
-    }
-
-    public void setAttributes(Set<com.DIY.Detissue.entity.Attribute> attributes) {
-        this.attributes = attributes;
-    }
 
     public Set<com.DIY.Detissue.entity.Category> getCategories() {
         return categories;

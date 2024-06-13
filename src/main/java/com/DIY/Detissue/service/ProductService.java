@@ -1,11 +1,8 @@
 package com.DIY.Detissue.service;
 
-import com.DIY.Detissue.entity.AttributeOption;
 import com.DIY.Detissue.entity.Product;
-import com.DIY.Detissue.entity.ProductSkus;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ProductResponse;
-import com.DIY.Detissue.repository.AttributeOptionsRepository;
 import com.DIY.Detissue.repository.ProductRepository;
 import com.DIY.Detissue.repository.ProductSkusRepository;
 import com.DIY.Detissue.service.Imp.ProductServiceImp;
@@ -14,7 +11,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 

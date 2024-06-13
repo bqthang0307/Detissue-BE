@@ -49,7 +49,7 @@ public class ShoppingCartItemController {
 
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);
-        response.setData(shoppingCartItemServiceImp.addShoppingCartItem(id, request.getProductId(), request.getQuantity(), request.getAttributOptionsId()));
+        response.setData(shoppingCartItemServiceImp.addShoppingCartItem(id, request.getProductId(), request.getQuantity()));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

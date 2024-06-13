@@ -11,7 +11,6 @@ public class AddProductToCartRequest {
     @NotNull
     @Min(value = 1, message = "Quantity must be greater than 0")
     private int quantity;
-    private int attributOptionsId;
 
     public int getProductId() {
         return productId;
@@ -29,11 +28,4 @@ public class AddProductToCartRequest {
         this.quantity = quantity;
     }
 
-    public int getAttributOptionsId() {
-        return attributOptionsId;
-    }
-
-    public void setAttributOptionsId(int attributOptionsId) {
-        this.attributOptionsId = attributOptionsId;
-    }
 }

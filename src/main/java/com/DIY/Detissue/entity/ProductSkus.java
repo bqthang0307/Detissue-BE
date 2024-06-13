@@ -21,14 +21,6 @@ public class ProductSkus {
     @Column(name = "stock_quantity")
     private Integer stockQuantity;
 
-
-
-    @ManyToMany
-    @JoinTable(name = "attribute_option_skus",
-            joinColumns = @JoinColumn(name = "skus_id"),
-            inverseJoinColumns = @JoinColumn(name = "attribute_option_id"))
-    private Set<com.DIY.Detissue.entity.AttributeOption> attributeOptions = new LinkedHashSet<>();
-
     @OneToMany(mappedBy = "productSkus")
     private Set<com.DIY.Detissue.entity.Image> images = new LinkedHashSet<>();
 
@@ -74,16 +66,6 @@ public class ProductSkus {
 
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
-    }
-
-
-
-    public Set<com.DIY.Detissue.entity.AttributeOption> getAttributeOptions() {
-        return attributeOptions;
-    }
-
-    public void setAttributeOptions(Set<com.DIY.Detissue.entity.AttributeOption> attributeOptions) {
-        this.attributeOptions = attributeOptions;
     }
 
     public Set<com.DIY.Detissue.entity.Image> getImages() {

@@ -15,7 +15,7 @@ public class ProductSkusController {
     @Autowired
     private ProductSkusServiceImp productSkusServiceImp;
 
-    @GetMapping("")
+    @GetMapping("product")
     private ResponseEntity<?> findByProductId(int id) {
 
         BaseResponse response = new BaseResponse();

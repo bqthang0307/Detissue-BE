@@ -27,21 +27,6 @@ public class OrderLine {
 
     @Column(name = "price", precision = 10, scale = 2)
     private BigDecimal price;
-
-    @ManyToMany
-    @JoinTable(name = "order_line_attributes_options",
-            joinColumns = @JoinColumn(name = "order_line_id"),
-            inverseJoinColumns = @JoinColumn(name = "attribute_options_id"))
-    private Set<AttributeOption> attributeOptions = new LinkedHashSet<>();
-
-    public Set<AttributeOption> getAttributeOptions() {
-        return attributeOptions;
-    }
-
-    public void setAttributeOptions(Set<AttributeOption> attributeOptions) {
-        this.attributeOptions = attributeOptions;
-    }
-
     public Integer getId() {
         return id;
     }

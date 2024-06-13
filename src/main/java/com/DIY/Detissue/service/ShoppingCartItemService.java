@@ -1,9 +1,7 @@
 package com.DIY.Detissue.service;
 
-import com.DIY.Detissue.entity.AttributeOption;
 import com.DIY.Detissue.entity.ProductSkus;
 import com.DIY.Detissue.entity.ShoppingCartItem;
-import com.DIY.Detissue.entity.UserCartItemAttributesOption;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
 import com.DIY.Detissue.repository.*;
@@ -19,13 +17,9 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     @Autowired
     private ShoppingCartItemRepository shoppingCartItemRepository;
     @Autowired
-    private AttributeOptionsRepository attributeOptionsRepository;
-    @Autowired
     private ProductSkusRepository productSkusRepository;
     @Autowired
     private CartRepository cartRepository;
-    @Autowired
-    private UserCartItemAttributeOptionRepository userCartItemAttributeOptionRepository;
 
 
     @Override
@@ -41,13 +35,13 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 response.setName(productSkus.getProduct().getName());
                 response.setImage(productSkus.getProduct().getImage());
                 response.setPrice(productSkus.getPrice());
-                attributeOptionsRepository.findByShoppingCartItemsId(item.getId()).forEach(attributeOptions -> {
-                    if (attributeOptions.getAttribute().getName().equals("color")) {
-                        response.setColor(attributeOptions.getValue());
-                    } else if (attributeOptions.getAttribute().getName().equals("size")) {
-                        response.setSize(attributeOptions.getValue());
-                    }
-                });
+//                attributeOptionsRepository.findByShoppingCartItemsId(item.getId()).forEach(attributeOptions -> {
+//                    if (attributeOptions.getAttribute().getName().equals("color")) {
+//                        response.setColor(attributeOptions.getValue());
+//                    } else if (attributeOptions.getAttribute().getName().equals("size")) {
+//                        response.setSize(attributeOptions.getValue());
+//                    }
+//                });
                 responses.add(response);
             }
         } catch (Exception e) {
@@ -57,13 +51,9 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     }
 
     @Override
-    public boolean addShoppingCartItem(int userId, int productId, int quantity,int attributOptionsId) {
+    public boolean addShoppingCartItem(int userId, int productId, int quantity) {
         try {
             ShoppingCartItem item = shoppingCartItemRepository.findByUserIdAndProductId(userId, productId);
-            if (attributOptionsId == 0){
-                List<AttributeOption> list = attributeOptionsRepository.findByProductId(productId);
-                attributOptionsId = list.get(0).getId();
-            }
             if (item != null) {
                 item.setQuantity(item.getQuantity() + 1);
                 shoppingCartItemRepository.save(item);
@@ -74,11 +64,11 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 }, () -> {
                     throw new CustomException("Cart not found");
                 });
-                productSkusRepository.findByProductIdAndAttributeOptions(productId,attributOptionsId).ifPresentOrElse(productSkus -> {
-                    newItem.setProductSkus(productSkus);
-                }, () -> {
-                    throw new CustomException("Product not found");
-                });
+//                productSkusRepository.findByProductIdAndAttributeOptions(productId,attributOptionsId).ifPresentOrElse(productSkus -> {
+//                    newItem.setProductSkus(productSkus);
+//                }, () -> {
+//                    throw new CustomException("Product not found");
+//                });
                 newItem.setQuantity(quantity);
                 shoppingCartItemRepository.save(newItem);
             }
@@ -92,9 +82,6 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
         try {
             ShoppingCartItem item = shoppingCartItemRepository.findById(id).
                                     orElseThrow(() -> new CustomException("ShoppingCartItem not found"));
-            //delete foreign key first
-            List<UserCartItemAttributesOption> listForeignKey = userCartItemAttributeOptionRepository.findByShoppingCartItemId(id);
-            userCartItemAttributeOptionRepository.deleteAll(listForeignKey);
             shoppingCartItemRepository.delete(item);
         } catch (Exception e) {
             throw new CustomException("Error deleteShopingCartItemById in ShoppingCartItemService " + e.getMessage());
