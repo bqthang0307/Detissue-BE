@@ -22,9 +22,6 @@ public class ProductSkus {
     private Integer stockQuantity;
 
     @OneToMany(mappedBy = "productSkus")
-    private Set<com.DIY.Detissue.entity.Image> images = new LinkedHashSet<>();
-
-    @OneToMany(mappedBy = "productSkus")
     private Set<com.DIY.Detissue.entity.OrderLine> orderLines = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "productSkus")
@@ -35,7 +32,17 @@ public class ProductSkus {
 
     @Column(name = "price")
     private Long price;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "size_id")
+    private Size size;
 
+    public Size getSize() {
+        return size;
+    }
+
+    public void setSize(Size size) {
+        this.size = size;
+    }
     public Long getPrice() {
         return price;
     }
@@ -66,14 +73,6 @@ public class ProductSkus {
 
     public void setStockQuantity(Integer stockQuantity) {
         this.stockQuantity = stockQuantity;
-    }
-
-    public Set<com.DIY.Detissue.entity.Image> getImages() {
-        return images;
-    }
-
-    public void setImages(Set<com.DIY.Detissue.entity.Image> images) {
-        this.images = images;
     }
 
     public Set<com.DIY.Detissue.entity.OrderLine> getOrderLines() {

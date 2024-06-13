@@ -17,8 +17,17 @@ public class Image {
     private String detail;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "product_skus_id")
-    private com.DIY.Detissue.entity.ProductSkus productSkus;
+    @JoinColumn(name = "product_id")
+    private Product product;
+
+    public Product getProduct() {
+        return product;
+    }
+
+    public void setProduct(Product product) {
+        this.product = product;
+    }
+
 
     public Integer getId() {
         return id;
@@ -42,14 +51,6 @@ public class Image {
 
     public void setDetail(String detail) {
         this.detail = detail;
-    }
-
-    public com.DIY.Detissue.entity.ProductSkus getProductSkus() {
-        return productSkus;
-    }
-
-    public void setProductSkus(com.DIY.Detissue.entity.ProductSkus productSkus) {
-        this.productSkus = productSkus;
     }
 
 }
