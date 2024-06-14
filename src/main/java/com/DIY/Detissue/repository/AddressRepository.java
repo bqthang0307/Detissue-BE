@@ -12,4 +12,7 @@ import java.util.List;
 public interface AddressRepository extends JpaRepository<Address, Integer> {
     @Query("select u.address from UserAddress u where u.user.id = ?1")
     List<Address> findByUserId(int userId);
+
+    @Query("select u.address from UserAddress u where u.user.id = ?1 and u.isDefault = true")
+    Address findDefaultAddressByUserId(int userId);
 }

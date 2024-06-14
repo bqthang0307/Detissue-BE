@@ -25,10 +25,6 @@ public class Address {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id")
     private com.DIY.Detissue.entity.Country country;
-
-    @Column(name = "payment_method_id")
-    private Integer paymentMethodId;
-
     @OneToMany(mappedBy = "shipingAddress")
     private Set<com.DIY.Detissue.entity.ShopOrder> shopOrders = new LinkedHashSet<>();
 
@@ -72,14 +68,6 @@ public class Address {
 
     public void setCountry(com.DIY.Detissue.entity.Country country) {
         this.country = country;
-    }
-
-    public Integer getPaymentMethodId() {
-        return paymentMethodId;
-    }
-
-    public void setPaymentMethodId(Integer paymentMethodId) {
-        this.paymentMethodId = paymentMethodId;
     }
 
     public Set<com.DIY.Detissue.entity.ShopOrder> getShopOrders() {

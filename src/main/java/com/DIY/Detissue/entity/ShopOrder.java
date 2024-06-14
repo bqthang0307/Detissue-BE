@@ -39,6 +39,18 @@ public class ShopOrder {
     @Column(name = "order_total")
     private Long orderTotal;
 
+    @Lob
+    @Column(name = "note")
+    private String note;
+
+    public String getNote() {
+        return note;
+    }
+
+    public void setNote(String note) {
+        this.note = note;
+    }
+
     public Long getOrderTotal() {
         return orderTotal;
     }
