@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService implements ProductServiceImp {
@@ -28,35 +29,11 @@ public class ProductService implements ProductServiceImp {
     private ImagesRepository imagesRepository;
     @Override
     public List<ProductResponse> findAllProduct(int page, int size) {
-        List<ProductResponse> responses = new ArrayList<>();
+        List<ProductResponse> responses;
         try {
             Pageable pageable = PageRequest.of(page, size);
-            List<Product> list = productRepository.findAllProductByPaging(pageable);
-            for (Product product : list) {
-                ProductResponse response = new ProductResponse();
-                response.setId(product.getId());
-                response.setName(product.getName());
-                response.setShortDesc(product.getShortDesc());
-                response.setFullDesc(product.getFullDesc());
-                response.setCategory(product.getCategory().getName());
-
-                List<String> imageList = new ArrayList<>();
-                imagesRepository.findByProductId(product.getId()).forEach(image -> {
-                    imageList.add(image.getSource());
-                });
-                response.setImage(imageList);
-
-                Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
-                long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
-
-                Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
-                long minPrice = (minPriceLong != null) ? minPriceLong : 0;
-
-                response.setPriceMax(maxPrice);
-                response.setPriceMin(minPrice);
-
-                responses.add(response);
-            }
+            List<Product> products = productRepository.findAllProductByPaging(pageable);
+            responses = products.stream().map(this::createProductResponse).collect(Collectors.toList());
         } catch (Exception e) {
             throw new CustomException("Error findAllProduct in ProductService " + e.getMessage());
         }
@@ -65,36 +42,12 @@ public class ProductService implements ProductServiceImp {
 
     @Override
     public List<ProductResponse> findProductByCategory(int page, int size, int id) {
-        List<ProductResponse> responses = new ArrayList<>();
+        List<ProductResponse> responses;
         try {
             Pageable pageable = PageRequest.of(page, size);
-            List<Product> list = productRepository.findByCategoryId(id, pageable);
-            for (Product product : list) {
-                ProductResponse response = new ProductResponse();
-                response.setId(product.getId());
-                response.setName(product.getName());
-                response.setShortDesc(product.getShortDesc());
-                response.setFullDesc(product.getFullDesc());
+            List<Product> products = productRepository.findByCategoryId(id, pageable);
+            responses = products.stream().map(this::createProductResponse).collect(Collectors.toList());
 
-                List<String> imageList = new ArrayList<>();
-                imagesRepository.findByProductId(product.getId()).forEach(image -> {
-                    imageList.add(image.getSource());
-                });
-                response.setImage(imageList);
-
-                response.setCategory(product.getCategory().getName());
-
-                Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
-                long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
-
-                Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
-                long minPrice = (minPriceLong != null) ? minPriceLong : 0;
-
-                response.setPriceMax(maxPrice);
-                response.setPriceMin(minPrice);
-
-                responses.add(response);
-            }
         } catch (Exception e) {
             throw new CustomException("Error findAllProduct in ProductService " + e.getMessage());
         }
@@ -103,30 +56,11 @@ public class ProductService implements ProductServiceImp {
 
     @Override
     public ProductResponse findById(int id) {
-        ProductResponse response = new ProductResponse();
+        ProductResponse response;
         try {
             Product product = productRepository.findProductById(id);
-            response.setId(product.getId());
-            response.setName(product.getName());
-            response.setShortDesc(product.getShortDesc());
-            response.setFullDesc(product.getFullDesc());
+            response = createProductResponse(product);
 
-            List<String> imageList = new ArrayList<>();
-            imagesRepository.findByProductId(product.getId()).forEach(image -> {
-                imageList.add(image.getSource());
-            });
-            response.setImage(imageList);
-
-            response.setCategory(product.getCategory().getName());
-
-            Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
-            long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
-
-            Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
-            long minPrice = (minPriceLong != null) ? minPriceLong : 0;
-
-            response.setPriceMax(maxPrice);
-            response.setPriceMin(minPrice);
         } catch (Exception e) {
             throw new CustomException("Error findProductBySearch in ProductService " + e.getMessage());
         }
@@ -135,38 +69,42 @@ public class ProductService implements ProductServiceImp {
 
     @Override
     public List<ProductResponse> findProductBySearch(String Search, int page, int size) {
-        List<ProductResponse> responses = new ArrayList<>();
+        List<ProductResponse> responses;
         try {
             Pageable pageable = PageRequest.of(page, size);
-            List<Product> list = productRepository.findByNameContaining(Search, pageable);
-            for (Product product : list) {
-                ProductResponse response = new ProductResponse();
-                response.setId(product.getId());
-                response.setName(product.getName());
-                response.setShortDesc(product.getShortDesc());
-                response.setFullDesc(product.getFullDesc());
-                response.setCategory(product.getCategory().getName());
-
-                List<String> imageList = new ArrayList<>();
-                imagesRepository.findByProductId(product.getId()).forEach(image -> {
-                    imageList.add(image.getSource());
-                });
-                response.setImage(imageList);
-
-                Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
-                long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
-
-                Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(product.getId());
-                long minPrice = (minPriceLong != null) ? minPriceLong : 0;
-
-                response.setPriceMax(maxPrice);
-                response.setPriceMin(minPrice);
-
-                responses.add(response);
-            }
+            List<Product> products = productRepository.findByNameContaining(Search, pageable);
+            responses = products.stream().map(this::createProductResponse).collect(Collectors.toList());
         } catch (Exception e) {
             throw new CustomException("Error findProductBySearch in ProductService " + e.getMessage());
         }
         return responses;
+    }
+
+    private long getMaxPrice(int productId) {
+        Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(productId);
+        return (maxPriceLong != null) ? maxPriceLong : 0;
+    }
+
+    private long getMinPrice(int productId) {
+        Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(productId);
+        return (minPriceLong != null) ? minPriceLong : 0;
+    }
+    private ProductResponse createProductResponse(Product product) {
+        ProductResponse response = new ProductResponse();
+        response.setId(product.getId());
+        response.setName(product.getName());
+        response.setShortDesc(product.getShortDesc());
+        response.setFullDesc(product.getFullDesc());
+        response.setCategory(product.getCategory().getName());
+
+        List<String> imageList = imagesRepository.findByProductId(product.getId()).stream()
+                .map(Image::getSource)
+                .collect(Collectors.toList());
+        response.setImage(imageList);
+
+        response.setPriceMax(getMaxPrice(product.getId()));
+        response.setPriceMin(getMinPrice(product.getId()));
+
+        return response;
     }
 }
