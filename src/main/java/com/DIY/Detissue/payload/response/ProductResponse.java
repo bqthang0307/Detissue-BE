@@ -1,11 +1,13 @@
 package com.DIY.Detissue.payload.response;
 
+import java.util.List;
+
 public class ProductResponse {
     private int id;
     private String name;
     private String shortDesc;
     private String fullDesc;
-    private String image;
+    private List<String> image;
     private long priceMax;
     private long priceMin;
     private String category;
@@ -42,11 +44,11 @@ public class ProductResponse {
         this.fullDesc = fullDesc;
     }
 
-    public String getImage() {
+    public List<String> getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(List<String> image) {
         this.image = image;
     }
 

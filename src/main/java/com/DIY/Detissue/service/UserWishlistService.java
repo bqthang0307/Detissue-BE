@@ -1,15 +1,9 @@
 package com.DIY.Detissue.service;
 
-import com.DIY.Detissue.entity.Product;
-import com.DIY.Detissue.entity.User;
-import com.DIY.Detissue.entity.UserWishlist;
-import com.DIY.Detissue.entity.UserWishlistId;
+import com.DIY.Detissue.entity.*;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ProductResponse;
-import com.DIY.Detissue.repository.ProductRepository;
-import com.DIY.Detissue.repository.ProductSkusRepository;
-import com.DIY.Detissue.repository.UserRepository;
-import com.DIY.Detissue.repository.UserWishlistRepository;
+import com.DIY.Detissue.repository.*;
 import com.DIY.Detissue.service.Imp.UserWishlistServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,6 +21,8 @@ public class UserWishlistService implements UserWishlistServiceImp {
     private ProductRepository productRepository;
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private ImagesRepository imagesRepository;
     @Override
     public List<ProductResponse> findUserWishListByUserId(int id) {
         List<ProductResponse> responses = new ArrayList<>();
@@ -38,8 +34,13 @@ public class UserWishlistService implements UserWishlistServiceImp {
                 response.setName(product.getName());
                 response.setShortDesc(product.getShortDesc());
                 response.setFullDesc(product.getFullDesc());
-                response.setImage(product.getImage());
                 response.setCategory(product.getCategory().getName());
+
+                List<String> imageList = new ArrayList<>();
+                imagesRepository.findByProductId(product.getId()).forEach(image -> {
+                    imageList.add(image.getSource());
+                });
+                response.setImage(imageList);
 
                 Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
                 long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;

@@ -31,17 +31,6 @@ public class Product {
     @OneToMany(mappedBy = "product")
     private Set<com.DIY.Detissue.entity.ProductSkus> productSkuses = new LinkedHashSet<>();
 
-    @Column(name = "image")
-    private String image;
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
-    }
-
     public Integer getId() {
         return id;
     }

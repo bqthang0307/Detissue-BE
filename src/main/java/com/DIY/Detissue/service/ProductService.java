@@ -1,8 +1,10 @@
 package com.DIY.Detissue.service;
 
+import com.DIY.Detissue.entity.Image;
 import com.DIY.Detissue.entity.Product;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.response.ProductResponse;
+import com.DIY.Detissue.repository.ImagesRepository;
 import com.DIY.Detissue.repository.ProductRepository;
 import com.DIY.Detissue.repository.ProductSkusRepository;
 import com.DIY.Detissue.service.Imp.ProductServiceImp;
@@ -22,6 +24,8 @@ public class ProductService implements ProductServiceImp {
     @Autowired
     private ProductSkusRepository productSkusRepository;
 
+    @Autowired
+    private ImagesRepository imagesRepository;
     @Override
     public List<ProductResponse> findAllProduct(int page, int size) {
         List<ProductResponse> responses = new ArrayList<>();
@@ -34,8 +38,13 @@ public class ProductService implements ProductServiceImp {
                 response.setName(product.getName());
                 response.setShortDesc(product.getShortDesc());
                 response.setFullDesc(product.getFullDesc());
-                response.setImage(product.getImage());
                 response.setCategory(product.getCategory().getName());
+
+                List<String> imageList = new ArrayList<>();
+                imagesRepository.findByProductId(product.getId()).forEach(image -> {
+                    imageList.add(image.getSource());
+                });
+                response.setImage(imageList);
 
                 Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
                 long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;
@@ -66,7 +75,13 @@ public class ProductService implements ProductServiceImp {
                 response.setName(product.getName());
                 response.setShortDesc(product.getShortDesc());
                 response.setFullDesc(product.getFullDesc());
-                response.setImage(product.getImage());
+
+                List<String> imageList = new ArrayList<>();
+                imagesRepository.findByProductId(product.getId()).forEach(image -> {
+                    imageList.add(image.getSource());
+                });
+                response.setImage(imageList);
+
                 response.setCategory(product.getCategory().getName());
 
                 Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
@@ -95,7 +110,13 @@ public class ProductService implements ProductServiceImp {
             response.setName(product.getName());
             response.setShortDesc(product.getShortDesc());
             response.setFullDesc(product.getFullDesc());
-            response.setImage(product.getImage());
+
+            List<String> imageList = new ArrayList<>();
+            imagesRepository.findByProductId(product.getId()).forEach(image -> {
+                imageList.add(image.getSource());
+            });
+            response.setImage(imageList);
+
             response.setCategory(product.getCategory().getName());
 
             Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
@@ -124,8 +145,13 @@ public class ProductService implements ProductServiceImp {
                 response.setName(product.getName());
                 response.setShortDesc(product.getShortDesc());
                 response.setFullDesc(product.getFullDesc());
-                response.setImage(product.getImage());
                 response.setCategory(product.getCategory().getName());
+
+                List<String> imageList = new ArrayList<>();
+                imagesRepository.findByProductId(product.getId()).forEach(image -> {
+                    imageList.add(image.getSource());
+                });
+                response.setImage(imageList);
 
                 Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(product.getId());
                 long maxPrice = (maxPriceLong != null) ? maxPriceLong : 0;

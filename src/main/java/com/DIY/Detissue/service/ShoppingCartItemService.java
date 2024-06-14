@@ -23,6 +23,8 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     private CartRepository cartRepository;
     @Autowired
     private ProductSkusRepository productSkusRepository;
+    @Autowired
+    private ImagesRepository imagesRepository;
 
 
     @Override
@@ -36,9 +38,16 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 response.setQuantity(item.getQuantity());
                 ProductSkus productSkus = item.getProductSkus();
                 response.setName(productSkus.getProduct().getName());
-                response.setImage(productSkus.getProduct().getImage());
                 response.setPrice(productSkus.getPrice());
                 response.setSize(productSkus.getSize().getName() );
+
+                List<String> imageList = new ArrayList<>();
+                imagesRepository.findByProductId(response.getId()).forEach(image -> {
+                    imageList.add(image.getSource());
+                });
+
+                response.setImage(imageList.get(0));
+
                 responses.add(response);
             }
         } catch (Exception e) {
