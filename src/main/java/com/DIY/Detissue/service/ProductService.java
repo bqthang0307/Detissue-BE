@@ -80,6 +80,8 @@ public class ProductService implements ProductServiceImp {
         return responses;
     }
 
+
+
     private long getMaxPrice(int productId) {
         Long maxPriceLong = productSkusRepository.findByProductIdWithMaxPrice(productId);
         return (maxPriceLong != null) ? maxPriceLong : 0;
@@ -89,6 +91,17 @@ public class ProductService implements ProductServiceImp {
         Long minPriceLong = productSkusRepository.findByProductIdWithMinPrice(productId);
         return (minPriceLong != null) ? minPriceLong : 0;
     }
+
+    /**
+     * This method creates a ProductResponse object from a Product object.
+     * It sets the ID, name, short description, full description, and category of the product.
+     * It also retrieves a list of images associated with the product and sets it in the response.
+     * Finally, it sets the maximum and minimum price of the product in the response.
+     *
+     * @param product The Product object to be transformed into a ProductResponse.
+     * @return A ProductResponse object containing the details of the product.
+     */
+
     private ProductResponse createProductResponse(Product product) {
         ProductResponse response = new ProductResponse();
         response.setId(product.getId());
