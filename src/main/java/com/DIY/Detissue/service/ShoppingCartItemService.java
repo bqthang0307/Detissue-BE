@@ -3,6 +3,7 @@ package com.DIY.Detissue.service;
 import com.DIY.Detissue.entity.ProductSkus;
 import com.DIY.Detissue.entity.ShoppingCartItem;
 import com.DIY.Detissue.exception.CustomException;
+import com.DIY.Detissue.payload.request.AddProductToCartRequest;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
 import com.DIY.Detissue.repository.*;
 import com.DIY.Detissue.service.Imp.ShoppingCartItemServiceImp;
@@ -17,9 +18,11 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     @Autowired
     private ShoppingCartItemRepository shoppingCartItemRepository;
     @Autowired
-    private ProductSkusRepository productSkusRepository;
+    private SizeRepository sizeRepository;
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private ProductSkusRepository productSkusRepository;
 
 
     @Override
@@ -35,13 +38,7 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 response.setName(productSkus.getProduct().getName());
                 response.setImage(productSkus.getProduct().getImage());
                 response.setPrice(productSkus.getPrice());
-//                attributeOptionsRepository.findByShoppingCartItemsId(item.getId()).forEach(attributeOptions -> {
-//                    if (attributeOptions.getAttribute().getName().equals("color")) {
-//                        response.setColor(attributeOptions.getValue());
-//                    } else if (attributeOptions.getAttribute().getName().equals("size")) {
-//                        response.setSize(attributeOptions.getValue());
-//                    }
-//                });
+                response.setSize(productSkus.getSize().getName() );
                 responses.add(response);
             }
         } catch (Exception e) {
@@ -51,25 +48,48 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     }
 
     @Override
-    public boolean addShoppingCartItem(int userId, int productId, int quantity) {
+    public boolean addShoppingCartItem(AddProductToCartRequest request) {
         try {
-            ShoppingCartItem item = shoppingCartItemRepository.findByUserIdAndProductId(userId, productId);
+            if (request.getSizeId() == 0) {
+                request.setSizeId(sizeRepository.findAll().get(0).getId());
+            }
+
+            ShoppingCartItem item = shoppingCartItemRepository.findByUserIdAndProductIdAndSizeId(
+                    request.getUserId(),
+                    request.getProductId(),
+                    request.getSizeId()
+            );
+
+            ProductSkus productSkus = productSkusRepository.findByProductIdAndSizeId(
+                    request.getProductId(),
+                    request.getSizeId()
+            );
+            if (productSkus == null) {
+                throw new CustomException("ProductSkus not found");
+            }
+
+            // if item exist, increase quantity
             if (item != null) {
-                item.setQuantity(item.getQuantity() + 1);
+                item.setQuantity(item.getQuantity() + request.getQuantity());
+                if (productSkus.getStockQuantity() < item.getQuantity()) {
+                    throw new CustomException("Stock not enough, Please reduce quantity !");
+                }
                 shoppingCartItemRepository.save(item);
             } else {
+                // if item not exist, create new item
+                if (productSkus.getStockQuantity() < request.getQuantity()) {
+                    throw new CustomException("Stock not enough, Please reduce quantity !");
+                }
                 ShoppingCartItem newItem = new ShoppingCartItem();
-                cartRepository.findByUserId(userId).ifPresentOrElse(cart -> {
+
+                cartRepository.findByUserId(request.getUserId()).ifPresentOrElse(cart -> {
                     newItem.setCart(cart);
                 }, () -> {
                     throw new CustomException("Cart not found");
                 });
-//                productSkusRepository.findByProductIdAndAttributeOptions(productId,attributOptionsId).ifPresentOrElse(productSkus -> {
-//                    newItem.setProductSkus(productSkus);
-//                }, () -> {
-//                    throw new CustomException("Product not found");
-//                });
-                newItem.setQuantity(quantity);
+
+                newItem.setProductSkus(productSkus);
+                newItem.setQuantity(request.getQuantity());
                 shoppingCartItemRepository.save(newItem);
             }
         } catch (Exception e) {

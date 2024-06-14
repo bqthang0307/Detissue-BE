@@ -6,15 +6,14 @@ public class ProductSkusResponse {
     private int id;
     private int quantity;
     private long price;
+    private String size;
 
-    private List<String> images;
-
-    public List<String> getImages() {
-        return images;
+    public String getSize() {
+        return size;
     }
 
-    public void setImages(List<String> images) {
-        this.images = images;
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public int getId() {

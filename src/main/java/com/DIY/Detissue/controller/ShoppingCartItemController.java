@@ -46,10 +46,11 @@ public class ShoppingCartItemController {
 
         token = token.substring(7);
         int id = jwtHelper.getUserIdFromToken(token);
+        request.setUserId(id);
 
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);
-        response.setData(shoppingCartItemServiceImp.addShoppingCartItem(id, request.getProductId(), request.getQuantity()));
+        response.setData(shoppingCartItemServiceImp.addShoppingCartItem(request));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

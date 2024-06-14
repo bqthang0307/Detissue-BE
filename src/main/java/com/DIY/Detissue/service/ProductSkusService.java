@@ -18,8 +18,6 @@ import java.util.List;
 public class ProductSkusService implements ProductSkusServiceImp {
     @Autowired
     private ProductSkusRepository productSkusRepository;
-    @Autowired
-    private ImagesRepository imagesRepository;
 
     @Override
     public List<ProductSkusResponse> findByProductId(int id) {
@@ -31,13 +29,7 @@ public class ProductSkusService implements ProductSkusServiceImp {
                 response.setId(productSku.getId());
                 response.setPrice(productSku.getPrice());
                 response.setQuantity(productSku.getStockQuantity());
-                List<Image> images = imagesRepository.findByProductSkusId(productSku.getId());
-                List<String> imageResponses = new ArrayList<>();
-                for (Image image : images) {
-                    String imageUrl = image.getSource();
-                    imageResponses.add(imageUrl);
-                }
-                response.setImages(imageResponses);
+                response.setSize(productSku.getSize().getName());
                 responses.add(response);
             }
 

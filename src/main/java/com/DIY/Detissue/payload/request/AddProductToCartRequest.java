@@ -11,6 +11,23 @@ public class AddProductToCartRequest {
     @NotNull
     @Min(value = 1, message = "Quantity must be greater than 0")
     private int quantity;
+    private int sizeId;
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
+
+    public int getSizeId() {
+        return sizeId;
+    }
+
+    public void setSizeId(int sizeId) {
+        this.sizeId = sizeId;
+    }
 
     public int getProductId() {
         return productId;
