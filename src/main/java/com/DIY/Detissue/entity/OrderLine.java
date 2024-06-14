@@ -2,10 +2,6 @@ package com.DIY.Detissue.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 @Entity
 @Table(name = "order_line", schema = "detissue")
 public class OrderLine {
@@ -26,7 +22,7 @@ public class OrderLine {
     private Integer quantity;
 
     @Column(name = "price", precision = 10, scale = 2)
-    private BigDecimal price;
+    private long price;
     public Integer getId() {
         return id;
     }
@@ -59,11 +55,11 @@ public class OrderLine {
         this.quantity = quantity;
     }
 
-    public BigDecimal getPrice() {
+    public long getPrice() {
         return price;
     }
 
-    public void setPrice(BigDecimal price) {
+    public void setPrice(long price) {
         this.price = price;
     }
 

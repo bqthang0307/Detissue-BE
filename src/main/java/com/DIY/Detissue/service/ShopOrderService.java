@@ -1,7 +1,9 @@
 package com.DIY.Detissue.service;
 
+import com.DIY.Detissue.entity.OrderLine;
 import com.DIY.Detissue.entity.OrderStatus;
 import com.DIY.Detissue.entity.ShopOrder;
+import com.DIY.Detissue.entity.ShoppingCartItem;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.ShopOrderRequest;
 import com.DIY.Detissue.payload.response.ShopOrderResponse;
@@ -28,6 +30,10 @@ public class ShopOrderService implements ShopOrderServiceImp {
     private DateHelper dateHelper;
     @Autowired
     private AddressRepository addressRepository;
+    @Autowired
+    private ProductSkusRepository productSkusRepository;
+    @Autowired
+    private ShoppingCartItemRepository shoppingCartItemRepository;
 
     @Override
     public List<ShopOrderResponse> findByUserId(int id) {
@@ -54,9 +60,15 @@ public class ShopOrderService implements ShopOrderServiceImp {
     public boolean addShopOrder(ShopOrderRequest request) {
         try {
             ShopOrder shopOrder = new ShopOrder();
+            // check if the user has a default address
             if (addressRepository.findDefaultAddressByUserId(request.getUserId()) == null) {
                 throw new CustomException("No default address found for user");
             }
+            List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByUserId(request.getUserId());
+            if (shoppingCartItems.size() == 0) {
+                throw new CustomException("No items found in the shopping cart");
+            }
+            // set the order details
             shopOrder.setShipingAddress(addressRepository.findDefaultAddressByUserId(request.getUserId()));
             shopOrder.setUser(userRepository.findById(request.getUserId()).get());
             shopOrder.setOrderTotal(request.getOrderTotal());
@@ -64,6 +76,20 @@ public class ShopOrderService implements ShopOrderServiceImp {
             shopOrder.setOrderDate(dateHelper.getInternetTime());
             shopOrder.setNote(request.getNote());
             shopOrderRepository.save(shopOrder);
+
+            // get the shopping cart items
+            List<OrderLine> orderLines = new ArrayList<>();
+            for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
+                OrderLine orderLine = new OrderLine();
+                orderLine.setProductSkus(shoppingCartItem.getProductSkus());
+                orderLine.setQuantity(shoppingCartItem.getQuantity());
+                orderLine.setShopOrder(shopOrder);
+                orderLine.setPrice(shoppingCartItem.getProductSkus().getPrice() * shoppingCartItem.getQuantity());
+                orderLines.add(orderLine);
+            }
+
+            orderLineRepository.saveAll(orderLines);
+            shoppingCartItemRepository.deleteAll(shoppingCartItems);
         } catch (Exception e) {
             throw new CustomException("Error addShopOrder in ShopOrderService " + e.getMessage());
         }
