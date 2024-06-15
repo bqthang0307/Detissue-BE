@@ -1,6 +1,7 @@
 package com.DIY.Detissue.service.Imp;
 
-import com.DIY.Detissue.entity.Product;
+import com.DIY.Detissue.payload.request.CreateProductRequest;
+import com.DIY.Detissue.payload.request.UpdateProductRequest;
 import com.DIY.Detissue.payload.response.ProductResponse;
 import org.springframework.data.jpa.repository.Query;
 
@@ -12,4 +13,8 @@ public interface ProductServiceImp {
     ProductResponse findById(int id);
     @Query("SELECT p FROM Product p WHERE p.name LIKE %?1%")
     List<ProductResponse> findProductBySearch(String Search, int page, int size);
+
+    boolean addProduct(CreateProductRequest product);
+    boolean updateProduct(UpdateProductRequest product);
+    boolean deleteProduct(int id);
 }
