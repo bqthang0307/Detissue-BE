@@ -1,9 +1,11 @@
 package com.DIY.Detissue.payload.response;
 
+import java.util.List;
+
 public class ShoppingCartItemResponse {
     private int id;
     private String name;
-    private String image;
+    private List<String> image;
     private long price;
     private int quantity;
     private String size;
@@ -32,11 +34,11 @@ public class ShoppingCartItemResponse {
         this.name = name;
     }
 
-    public String getImage() {
+    public List<String> getImage() {
         return image;
     }
 
-    public void setImage(String image) {
+    public void setImage(List<String> image) {
         this.image = image;
     }
 

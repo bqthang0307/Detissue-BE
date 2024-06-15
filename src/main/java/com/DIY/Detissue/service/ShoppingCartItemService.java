@@ -46,7 +46,7 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                     imageList.add(image.getSource());
                 });
 
-                response.setImage(imageList.get(0));
+                response.setImage(imageList);
 
                 responses.add(response);
             }
