@@ -74,11 +74,11 @@ public class ShopOrderController {
     @PostMapping("update")
     ResponseEntity<?> updateShopOrderStatus(@RequestHeader("Authorization") String token,
                                             @RequestParam int shopOrderId,
-                                            @RequestParam int status){
+                                            @RequestParam int statusId){
         token = token.substring(7);
         int id = jwtHelper.getUserIdFromToken(token);
 
-        boolean result = shopOrderServiceImp.updateShopOrderStatus(shopOrderId, status, id);
+        boolean result = shopOrderServiceImp.updateShopOrderStatus(shopOrderId, statusId, id);
 
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);
