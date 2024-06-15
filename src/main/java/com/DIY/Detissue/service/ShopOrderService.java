@@ -1,11 +1,11 @@
 package com.DIY.Detissue.service;
 
 import com.DIY.Detissue.entity.OrderLine;
-import com.DIY.Detissue.entity.OrderStatus;
 import com.DIY.Detissue.entity.ShopOrder;
 import com.DIY.Detissue.entity.ShoppingCartItem;
+import com.DIY.Detissue.entity.User;
 import com.DIY.Detissue.exception.CustomException;
-import com.DIY.Detissue.payload.request.ShopOrderRequest;
+import com.DIY.Detissue.payload.request.CreateShopOrderRequest;
 import com.DIY.Detissue.payload.response.ShopOrderResponse;
 import com.DIY.Detissue.repository.*;
 import com.DIY.Detissue.service.Imp.ShopOrderServiceImp;
@@ -57,7 +57,7 @@ public class ShopOrderService implements ShopOrderServiceImp {
     }
 
     @Override
-    public boolean addShopOrder(ShopOrderRequest request) {
+    public boolean addShopOrder(CreateShopOrderRequest request) {
         try {
             ShopOrder shopOrder = new ShopOrder();
             // check if the user has a default address
@@ -92,6 +92,25 @@ public class ShopOrderService implements ShopOrderServiceImp {
             shoppingCartItemRepository.deleteAll(shoppingCartItems);
         } catch (Exception e) {
             throw new CustomException("Error addShopOrder in ShopOrderService " + e.getMessage());
+        }
+        return true;
+    }
+
+    @Override
+    public boolean updateShopOrderStatus(int id, int status, int userId) {
+        ShopOrder shopOrder = shopOrderRepository.findById(id).get();
+        User user = userRepository.findById(userId).get();
+
+        // check if the user has permission to update the order
+        if (user.getRole().getId() != 1 && shopOrder.getUser().getId() != userId) {
+            throw new CustomException("User does not have permission to update this order");
+        }
+
+        try {
+            shopOrder.setOrderStatus(orderStatusRepository.findById(status).get());
+            shopOrderRepository.save(shopOrder);
+        } catch (Exception e) {
+            throw new CustomException("Error updateShopOrderStatus in ShopOrderService " + e.getMessage());
         }
         return true;
     }

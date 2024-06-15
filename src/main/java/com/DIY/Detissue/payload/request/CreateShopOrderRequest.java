@@ -1,11 +1,10 @@
 package com.DIY.Detissue.payload.request;
 
-public class ShopOrderRequest {
+public class CreateShopOrderRequest {
     private int userId;
     private long orderTotal;
     private int paymentMethodId;
     private int orderStatusId;
-
     private String note;
 
     public int getUserId() {

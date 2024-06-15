@@ -1,6 +1,6 @@
 package com.DIY.Detissue.service.Imp;
 
-import com.DIY.Detissue.payload.request.ShopOrderRequest;
+import com.DIY.Detissue.payload.request.CreateShopOrderRequest;
 import com.DIY.Detissue.payload.response.ShopOrderResponse;
 
 import java.util.List;
@@ -8,5 +8,6 @@ import java.util.List;
 public interface ShopOrderServiceImp {
     List<ShopOrderResponse> findByUserId(int id);
 
-    boolean addShopOrder(ShopOrderRequest request);
+    boolean addShopOrder(CreateShopOrderRequest request);
+    boolean updateShopOrderStatus(int id, int status, int userId);
 }
