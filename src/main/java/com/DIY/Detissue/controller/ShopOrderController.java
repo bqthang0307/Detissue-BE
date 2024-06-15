@@ -86,4 +86,25 @@ public class ShopOrderController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+    @GetMapping("")
+    ResponseEntity<?> findAllShopOrder(@RequestParam int page, @RequestParam int size){
+        List<ShopOrderResponse> list = shopOrderServiceImp.findAllShopOrder(page, size);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(list);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("{id}")
+    ResponseEntity<?> findShopOrderById(@PathVariable int id){
+        ShopOrderResponse result = shopOrderServiceImp.findById(id);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(result);
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

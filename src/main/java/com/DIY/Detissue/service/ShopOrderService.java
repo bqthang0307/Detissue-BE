@@ -58,16 +58,16 @@ public class ShopOrderService implements ShopOrderServiceImp {
 
     @Override
     public boolean addShopOrder(CreateShopOrderRequest request) {
+        // check if the user has a default address
+        if (addressRepository.findDefaultAddressByUserId(request.getUserId()) == null) {
+            throw new CustomException("No default address found for user");
+        }
+        List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByUserId(request.getUserId());
+        if (shoppingCartItems.size() == 0) {
+            throw new CustomException("No items found in the shopping cart");
+        }
         try {
             ShopOrder shopOrder = new ShopOrder();
-            // check if the user has a default address
-            if (addressRepository.findDefaultAddressByUserId(request.getUserId()) == null) {
-                throw new CustomException("No default address found for user");
-            }
-            List<ShoppingCartItem> shoppingCartItems = shoppingCartItemRepository.findByUserId(request.getUserId());
-            if (shoppingCartItems.size() == 0) {
-                throw new CustomException("No items found in the shopping cart");
-            }
             // set the order details
             shopOrder.setShipingAddress(addressRepository.findDefaultAddressByUserId(request.getUserId()));
             shopOrder.setUser(userRepository.findById(request.getUserId()).get());
@@ -113,5 +113,56 @@ public class ShopOrderService implements ShopOrderServiceImp {
             throw new CustomException("Error updateShopOrderStatus in ShopOrderService " + e.getMessage());
         }
         return true;
+    }
+
+    @Override
+    public List<ShopOrderResponse> findAllShopOrder(int page, int size) {
+        List<ShopOrderResponse> responses = new ArrayList<>();
+        try {
+            List<ShopOrder> list = shopOrderRepository.findAll();
+
+            for (ShopOrder shopOrder : list) {
+                ShopOrderResponse response = new ShopOrderResponse();
+                response.setId(shopOrder.getId());
+                response.setTotal_price(shopOrder.getOrderTotal());
+                response.setStatus(shopOrder.getOrderStatus().getStatus());
+                response.setOrderTime(shopOrder.getOrderDate());
+                response.setItem_count(orderLineRepository.findByShopOrderId(shopOrder.getId()).size());
+                response.setUserName(shopOrder.getUser().getUsername());
+                response.setUserId(shopOrder.getUser().getId());
+                response.setShippingAddress(shopOrder.getShipingAddress().getCountry().getName() +
+                        ", " + shopOrder.getShipingAddress().getTownCity());
+                response.setShippingAddressId(shopOrder.getShipingAddress().getId());
+                response.setPaymentMethod(shopOrder.getPaymentMethod().getPaymentType().getValue());
+                response.setPaymentMethodId(shopOrder.getPaymentMethod().getId());
+                responses.add(response);
+            }
+        } catch (Exception e) {
+            throw new CustomException("Error findAllShopOrder in ShopOrderService " + e.getMessage());
+        }
+        return responses;
+    }
+
+    @Override
+    public ShopOrderResponse findById(int id) {
+        ShopOrderResponse response = new ShopOrderResponse();
+        try {
+            ShopOrder shopOrder = shopOrderRepository.findById(id).get();
+            response.setId(shopOrder.getId());
+            response.setTotal_price(shopOrder.getOrderTotal());
+            response.setStatus(shopOrder.getOrderStatus().getStatus());
+            response.setOrderTime(shopOrder.getOrderDate());
+            response.setItem_count(orderLineRepository.findByShopOrderId(shopOrder.getId()).size());
+            response.setUserName(shopOrder.getUser().getUsername());
+            response.setUserId(shopOrder.getUser().getId());
+            response.setShippingAddress(shopOrder.getShipingAddress().getCountry().getName() +
+                    ", " + shopOrder.getShipingAddress().getTownCity());
+            response.setShippingAddressId(shopOrder.getShipingAddress().getId());
+            response.setPaymentMethod(shopOrder.getPaymentMethod().getPaymentType().getValue());
+            response.setPaymentMethodId(shopOrder.getPaymentMethod().getId());
+        } catch (Exception e) {
+            throw new CustomException("Error findById in ShopOrderService " + e.getMessage());
+        }
+        return response;
     }
 }

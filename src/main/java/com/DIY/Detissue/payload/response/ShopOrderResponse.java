@@ -8,6 +8,60 @@ public class ShopOrderResponse {
     private String status;
     private long total_price;
     private int item_count;
+    private int userId;
+    private String userName;
+    private String paymentMethod;
+    private int paymentMethodId;
+    private String shippingAddress;
+    private int shippingAddressId;
+
+    public int getPaymentMethodId() {
+        return paymentMethodId;
+    }
+
+    public void setPaymentMethodId(int paymentMethodId) {
+        this.paymentMethodId = paymentMethodId;
+    }
+
+    public int getShippingAddressId() {
+        return shippingAddressId;
+    }
+
+    public void setShippingAddressId(int shippingAddressId) {
+        this.shippingAddressId = shippingAddressId;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getPaymentMethod() {
+        return paymentMethod;
+    }
+
+    public void setShippingAddress(String shippingAddress) {
+        this.shippingAddress = shippingAddress;
+    }
+
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 
     public int getId() {
         return id;

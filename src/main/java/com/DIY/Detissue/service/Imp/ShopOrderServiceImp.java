@@ -10,4 +10,7 @@ public interface ShopOrderServiceImp {
 
     boolean addShopOrder(CreateShopOrderRequest request);
     boolean updateShopOrderStatus(int id, int status, int userId);
+
+    List<ShopOrderResponse> findAllShopOrder(int page, int size);
+    ShopOrderResponse findById(int id);
 }
