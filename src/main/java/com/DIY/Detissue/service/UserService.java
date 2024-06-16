@@ -7,6 +7,7 @@ import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.SignupRequest;
 import com.DIY.Detissue.payload.response.AddressResponse;
 import com.DIY.Detissue.repository.AddressRepository;
+import com.DIY.Detissue.repository.UserRoleRepository;
 import com.DIY.Detissue.repository.UserAddressRepository;
 import com.DIY.Detissue.repository.UserRepository;
 import com.DIY.Detissue.service.Imp.UserServiceImp;
@@ -30,6 +31,8 @@ public class UserService implements UserServiceImp {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private DateHelper dateHelper;
+    @Autowired
+    private UserRoleRepository userRoleRepository;
 
     @Override
     public boolean addUser(SignupRequest request) {
@@ -93,5 +96,16 @@ public class UserService implements UserServiceImp {
         } catch (Exception e) {
             throw new CustomException("Error findByUsername in UserService " + e.getMessage());
         }
+    }
+
+    @Override
+    public boolean authorizeAdminByUserId(int id) {
+        try {
+            User user = userRepository.findById(id).get();
+            if (user.getRole().getName().equals("admin")) return true;
+        } catch (Exception e) {
+            throw new CustomException("Error AuthorizeAdminByUserId in UserService " + e.getMessage());
+        }
+        return false;
     }
 }

@@ -77,4 +77,16 @@ public class UserController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PostMapping("authorize")
+    public ResponseEntity<?> authorize(@RequestHeader("Authorization") String token) {
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(userServiceImp.authorizeAdminByUserId(id));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 }

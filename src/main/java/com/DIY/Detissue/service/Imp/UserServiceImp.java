@@ -12,4 +12,5 @@ public interface UserServiceImp {
 
     List<AddressResponse> findAddressByUserId(int id);
     User findByUsername(String username);
+    boolean authorizeAdminByUserId(int id);
 }

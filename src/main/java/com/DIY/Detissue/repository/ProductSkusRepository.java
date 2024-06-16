@@ -16,5 +16,6 @@ public interface ProductSkusRepository extends JpaRepository<ProductSkus,Integer
     Long findByProductIdWithMaxPrice(int id);
     Optional<ProductSkus> findById(int id);
     List<ProductSkus> findByProductId(int id);
+    @Query("SELECT p FROM ProductSkus p WHERE p.product.id = ?1 AND p.size.id = ?2")
     ProductSkus findByProductIdAndSizeId(int productId, int sizeId);
 }

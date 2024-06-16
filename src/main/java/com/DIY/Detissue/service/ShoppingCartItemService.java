@@ -59,16 +59,18 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
     @Override
     public boolean addShoppingCartItem(AddProductToCartRequest request) {
         try {
+            // if sizeId is 0, get the first sizeId
             if (request.getSizeId() == 0) {
                 request.setSizeId(sizeRepository.findAll().get(0).getId());
             }
 
+            // check if item exist
             ShoppingCartItem item = shoppingCartItemRepository.findByUserIdAndProductIdAndSizeId(
                     request.getUserId(),
                     request.getProductId(),
                     request.getSizeId()
             );
-
+            // check if productSkus exist
             ProductSkus productSkus = productSkusRepository.findByProductIdAndSizeId(
                     request.getProductId(),
                     request.getSizeId()
