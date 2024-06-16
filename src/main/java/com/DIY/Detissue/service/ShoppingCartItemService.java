@@ -39,10 +39,10 @@ public class ShoppingCartItemService implements ShoppingCartItemServiceImp {
                 ProductSkus productSkus = item.getProductSkus();
                 response.setName(productSkus.getProduct().getName());
                 response.setPrice(productSkus.getPrice());
-                response.setSize(productSkus.getSize().getName() );
+                response.setSize(productSkus.getSize().getName());
 
                 List<String> imageList = new ArrayList<>();
-                imagesRepository.findByProductId(response.getId()).forEach(image -> {
+                imagesRepository.findByProductId(productSkus.getProduct().getId()).forEach(image -> {
                     imageList.add(image.getSource());
                 });
 
