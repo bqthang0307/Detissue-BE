@@ -2,7 +2,6 @@ package com.DIY.Detissue.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -66,7 +65,7 @@ public class User {
     private Set<Cart> carts = new LinkedHashSet<>();
 
     @Column(name = "birth_day")
-    private LocalDate birthDay;
+    private Date birthDay;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "role_id")
@@ -80,11 +79,11 @@ public class User {
         this.role = role;
     }
 
-    public LocalDate getBirthDay() {
+    public Date getBirthDay() {
         return birthDay;
     }
 
-    public void setBirthDay(LocalDate birthDay) {
+    public void setBirthDay(Date birthDay) {
         this.birthDay = birthDay;
     }
 

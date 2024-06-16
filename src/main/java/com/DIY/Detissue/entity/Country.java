@@ -2,7 +2,6 @@ package com.DIY.Detissue.entity;
 
 import jakarta.persistence.*;
 
-import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -18,7 +17,7 @@ public class Country {
     private String name;
 
     @Column(name = "shipping_price", precision = 10, scale = 2)
-    private BigDecimal shippingPrice;
+    private long shippingPrice;
 
     @OneToMany(mappedBy = "country")
     private Set<com.DIY.Detissue.entity.Address> addresses = new LinkedHashSet<>();
@@ -39,11 +38,11 @@ public class Country {
         this.name = name;
     }
 
-    public BigDecimal getShippingPrice() {
+    public long getShippingPrice() {
         return shippingPrice;
     }
 
-    public void setShippingPrice(BigDecimal shippingPrice) {
+    public void setShippingPrice(long shippingPrice) {
         this.shippingPrice = shippingPrice;
     }
 

@@ -3,6 +3,7 @@ package com.DIY.Detissue.controller;
 import com.DIY.Detissue.entity.User;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.SignupRequest;
+import com.DIY.Detissue.payload.request.UserRequest;
 import com.DIY.Detissue.payload.response.BaseResponse;
 import com.DIY.Detissue.payload.response.ShopOrderResponse;
 import com.DIY.Detissue.payload.response.ShoppingCartItemResponse;
@@ -86,6 +87,37 @@ public class UserController {
         BaseResponse response = new BaseResponse();
         response.setStatusCode(200);
         response.setData(userServiceImp.authorizeAdminByUserId(id));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @GetMapping("detail")
+    public ResponseEntity<?> getUserDetail(@RequestHeader("Authorization") String token) {
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
+
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(userServiceImp.getUserById(id));
+
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping("update")
+    public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String token, @Valid UserRequest request, BindingResult bindingResult) {
+        token = token.substring(7);
+        int id = jwtHelper.getUserIdFromToken(token);
+
+        if (bindingResult.hasErrors()) {
+            List<FieldError> listError = bindingResult.getFieldErrors();
+            for (FieldError errors : listError) {
+                throw new CustomException(errors.getDefaultMessage());
+            }
+        }
+        request.setId(id);
+        BaseResponse response = new BaseResponse();
+        response.setStatusCode(200);
+        response.setData(userServiceImp.updateUser(request));
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }

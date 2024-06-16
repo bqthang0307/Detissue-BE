@@ -79,12 +79,13 @@ public class ShopOrderService implements ShopOrderServiceImp {
 
             // get the shopping cart items
             List<OrderLine> orderLines = new ArrayList<>();
+            long shippingFee = addressRepository.findDefaultAddressByUserId(request.getUserId()).getCountry().getShippingPrice();
             for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
                 OrderLine orderLine = new OrderLine();
                 orderLine.setProductSkus(shoppingCartItem.getProductSkus());
                 orderLine.setQuantity(shoppingCartItem.getQuantity());
                 orderLine.setShopOrder(shopOrder);
-                orderLine.setPrice(shoppingCartItem.getProductSkus().getPrice() * shoppingCartItem.getQuantity());
+                orderLine.setPrice(shoppingCartItem.getProductSkus().getPrice() * shoppingCartItem.getQuantity() + shippingFee);
                 orderLines.add(orderLine);
             }
 

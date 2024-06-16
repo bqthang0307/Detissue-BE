@@ -5,7 +5,9 @@ import com.DIY.Detissue.entity.User;
 import com.DIY.Detissue.entity.UserAddress;
 import com.DIY.Detissue.exception.CustomException;
 import com.DIY.Detissue.payload.request.SignupRequest;
+import com.DIY.Detissue.payload.request.UserRequest;
 import com.DIY.Detissue.payload.response.AddressResponse;
+import com.DIY.Detissue.payload.response.UserResponse;
 import com.DIY.Detissue.repository.AddressRepository;
 import com.DIY.Detissue.repository.UserRoleRepository;
 import com.DIY.Detissue.repository.UserAddressRepository;
@@ -107,5 +109,47 @@ public class UserService implements UserServiceImp {
             throw new CustomException("Error AuthorizeAdminByUserId in UserService " + e.getMessage());
         }
         return false;
+    }
+
+    @Override
+    public UserResponse getUserById(int id) {
+        try {
+            User user = userRepository.findById(id).get();
+            UserResponse response = new UserResponse();
+            response.setId(user.getId());
+            response.setUsername(user.getUsername());
+            response.setEmail(user.getEmail());
+            response.setPhone(user.getPhone());
+            response.setFullname(user.getFullname());
+            response.setCreateTime(user.getCreate_at().toString());
+            response.setLastLoginTime(user.getLast_login().toString());
+            return response;
+        } catch (Exception e) {
+            throw new CustomException("Error getUserById in UserService " + e.getMessage());
+        }
+    }
+
+    @Override
+    public boolean updateUser(UserRequest request) {
+        try {
+            User user = userRepository.findById(request.getId()).get();
+            user.setUsername(request.getUsername());
+            user.setEmail(request.getEmail());
+            user.setPhone(request.getPhone());
+            user.setFullname(request.getFullname());
+
+            if (request.getBirthDay() == null) throw new CustomException("BirthDay cannot be null");
+            
+            user.setBirthDay(dateHelper.convertStringToDate(request.getBirthDay()));
+            if (request.getPassword() != null) {
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
+            } else {
+                throw new CustomException("Password cannot be null");
+            }
+            userRepository.save(user);
+        } catch (Exception e) {
+            throw new CustomException("Error updateUser in UserService " + e.getMessage());
+        }
+        return true;
     }
 }
