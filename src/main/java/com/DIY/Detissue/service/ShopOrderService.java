@@ -67,11 +67,17 @@ public class ShopOrderService implements ShopOrderServiceImp {
             throw new CustomException("No items found in the shopping cart");
         }
         try {
+            long cartTotal = 0;
+            long shippingFee = addressRepository.findDefaultAddressByUserId(request.getUserId()).getCountry().getShippingPrice();
+            for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
+                cartTotal += shoppingCartItem.getProductSkus().getPrice() * shoppingCartItem.getQuantity();
+            }
+            cartTotal += shippingFee;
             ShopOrder shopOrder = new ShopOrder();
             // set the order details
             shopOrder.setShipingAddress(addressRepository.findDefaultAddressByUserId(request.getUserId()));
             shopOrder.setUser(userRepository.findById(request.getUserId()).get());
-            shopOrder.setOrderTotal(request.getOrderTotal());
+            shopOrder.setOrderTotal(cartTotal);
             shopOrder.setOrderStatus(orderStatusRepository.findById(1).get());
             shopOrder.setOrderDate(dateHelper.getInternetTime());
             shopOrder.setNote(request.getNote());
@@ -79,13 +85,12 @@ public class ShopOrderService implements ShopOrderServiceImp {
 
             // get the shopping cart items
             List<OrderLine> orderLines = new ArrayList<>();
-            long shippingFee = addressRepository.findDefaultAddressByUserId(request.getUserId()).getCountry().getShippingPrice();
             for (ShoppingCartItem shoppingCartItem : shoppingCartItems) {
                 OrderLine orderLine = new OrderLine();
                 orderLine.setProductSkus(shoppingCartItem.getProductSkus());
                 orderLine.setQuantity(shoppingCartItem.getQuantity());
                 orderLine.setShopOrder(shopOrder);
-                orderLine.setPrice(shoppingCartItem.getProductSkus().getPrice() * shoppingCartItem.getQuantity() + shippingFee);
+                orderLine.setPrice(shoppingCartItem.getProductSkus().getPrice() * shoppingCartItem.getQuantity());
                 orderLines.add(orderLine);
             }
 

@@ -83,6 +83,8 @@ public class UserService implements UserServiceImp {
                 UserAddress userAddress = userAddressRepository.findByUserIdAndAddressId(id, address.getId());
                 if (userAddress == null) throw new CustomException("UserAddress not found");
                 response.setDefault(userAddress.getIsDefault());
+                response.setShippingFee(address.getCountry().getShippingPrice());
+                response.setCompany(address.getCompany());
                 responses.add(response);
             }
         } catch (Exception e) {
@@ -139,7 +141,7 @@ public class UserService implements UserServiceImp {
             user.setFullname(request.getFullname());
 
             if (request.getBirthDay() == null) throw new CustomException("BirthDay cannot be null");
-            
+
             user.setBirthDay(dateHelper.convertStringToDate(request.getBirthDay()));
             if (request.getPassword() != null) {
                 user.setPassword(passwordEncoder.encode(request.getPassword()));

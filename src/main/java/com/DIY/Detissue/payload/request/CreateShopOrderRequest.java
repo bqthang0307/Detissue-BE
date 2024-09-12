@@ -2,7 +2,6 @@ package com.DIY.Detissue.payload.request;
 
 public class CreateShopOrderRequest {
     private int userId;
-    private long orderTotal;
     private int paymentMethodId;
     private int orderStatusId;
     private String note;
@@ -13,14 +12,6 @@ public class CreateShopOrderRequest {
 
     public void setUserId(int userId) {
         this.userId = userId;
-    }
-
-    public long getOrderTotal() {
-        return orderTotal;
-    }
-
-    public void setOrderTotal(long orderTotal) {
-        this.orderTotal = orderTotal;
     }
 
     public int getPaymentMethodId() {

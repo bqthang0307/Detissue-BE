@@ -6,6 +6,26 @@ public class AddressResponse {
     private String town_city;
     private String state_country;
     private String country;
+    private long shippingFee;
+
+    private String company;
+
+    public String getCompany() {
+        return company;
+    }
+
+    public void setCompany(String company) {
+        this.company = company;
+    }
+
+    public long getShippingFee() {
+        return shippingFee;
+    }
+
+    public void setShippingFee(long shippingFee) {
+        this.shippingFee = shippingFee;
+    }
+
     private boolean isDefault;
 
     public boolean isDefault() {
