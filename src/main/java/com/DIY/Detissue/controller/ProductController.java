@@ -5,6 +5,7 @@ import com.DIY.Detissue.payload.request.UpdateProductRequest;
 import com.DIY.Detissue.payload.response.BaseResponse;
 import com.DIY.Detissue.payload.response.ProductResponse;
 import com.DIY.Detissue.service.Imp.ProductServiceImp;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,6 +22,7 @@ public class ProductController {
     @Autowired
     private ProductServiceImp productServiceImp;
 
+    @Operation(summary = "Show all products")
     @GetMapping("")
     ResponseEntity<?> findAllProduct(@RequestParam int page,
                                      @RequestParam int size) {

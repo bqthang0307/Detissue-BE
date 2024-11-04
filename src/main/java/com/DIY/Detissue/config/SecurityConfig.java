@@ -69,7 +69,10 @@ public class SecurityConfig {
                                 "/product/**",
                                 "/category",
                                 "/blog",
-                                "/comment").permitAll()
+                                "/comment",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**",
+                                "/swagger-ui.html").permitAll()
                         .requestMatchers("/product/user").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
