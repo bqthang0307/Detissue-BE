@@ -103,7 +103,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String token, @Valid UserRequest request, BindingResult bindingResult) {
         token = token.substring(7);
         int id = jwtHelper.getUserIdFromToken(token);

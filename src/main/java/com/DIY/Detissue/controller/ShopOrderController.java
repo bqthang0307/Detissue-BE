@@ -56,7 +56,7 @@ public class ShopOrderController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("cancel")
+    @DeleteMapping("cancel")
     ResponseEntity<?> cancelShopOrder(@RequestHeader("Authorization") String token,
                                       @RequestParam int shopOrderId){
 
@@ -71,7 +71,7 @@ public class ShopOrderController {
 
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @PostMapping("update")
+    @PutMapping("update")
     ResponseEntity<?> updateShopOrderStatus(@RequestHeader("Authorization") String token,
                                             @RequestParam int shopOrderId,
                                             @RequestParam int statusId){
