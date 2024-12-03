@@ -11,6 +11,11 @@ import com.DIY.Detissue.service.Imp.ShopOrderServiceImp;
 import com.DIY.Detissue.service.Imp.ShoppingCartItemServiceImp;
 import com.DIY.Detissue.service.Imp.UserServiceImp;
 import com.DIY.Detissue.utils.JwtHelper;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +39,17 @@ public class UserController {
     @Autowired
     private AuthenticationManager authenticationManager;
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Đăng ký thành công",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ. Kiểm tra các lỗi trong dữ liệu đầu vào.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Lỗi máy chủ nội bộ",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class)))
+    })
     @PostMapping("signup")
     public ResponseEntity<?> signup(@Valid SignupRequest signupRequest, BindingResult bindingResult) {
         // Get list error
@@ -49,10 +65,24 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Đăng nhập thành công",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Thông tin xác thực không hợp lệ. Vui lòng kiểm tra tên người dùng và mật khẩu.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ. Kiểm tra các lỗi trong dữ liệu đầu vào.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Lỗi máy chủ nội bộ",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class)))
+    })
     @PostMapping("signin")
     public ResponseEntity<?> signin(
-            @RequestParam String username,
-            @RequestParam String password
+            @Parameter(description = "Username for signin", example = "nguyenvana") @RequestParam String username,
+            @Parameter(description = "Password for signin", example = "12345678") @RequestParam String password
     ) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
         authenticationManager.authenticate(token);
@@ -79,6 +109,23 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Ủy quyền thành công",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "401", description = "Không có quyền truy cập. Vui lòng kiểm tra token.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "403", description = "Truy cập bị cấm. Người dùng không có quyền truy cập tài nguyên này.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "400", description = "Yêu cầu không hợp lệ. Kiểm tra các lỗi trong dữ liệu đầu vào.",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class))),
+            @ApiResponse(responseCode = "500", description = "Lỗi máy chủ nội bộ",
+                    content = @Content(mediaType = "application/json",
+                            schema = @Schema(implementation = BaseResponse.class)))
+    })
     @PostMapping("authorize")
     public ResponseEntity<?> authorize(@RequestHeader("Authorization") String token) {
         token = token.substring(7);
@@ -103,7 +150,7 @@ public class UserController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
-    @PostMapping("update")
+    @PutMapping("update")
     public ResponseEntity<?> updateUser(@RequestHeader("Authorization") String token, @Valid UserRequest request, BindingResult bindingResult) {
         token = token.substring(7);
         int id = jwtHelper.getUserIdFromToken(token);
